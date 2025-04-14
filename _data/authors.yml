@@ -1,0 +1,16 @@
+roberthollands:
+  name: "Robert Hollands"
+  avatar: "/assets/images/profile.jpg" # optional, can change
+  bio: "Cybersecurity student, Help Desk Engineer, and homelab enthusiast."
+  location: "Augusta, GA"
+  email: "abramhollandsbusiness@gmail.com"
+  links:
+    - label: "GitHub"
+      icon: "fab fa-github"
+      url: "https://github.com/roberthollands"
+    - label: "LinkedIn"
+      icon: "fab fa-linkedin"
+      url: "https://www.linkedin.com/in/roberthollands"
+    - label: "Resume"
+      icon: "fas fa-file"
+      url: "/resume.pdf"  # You can upload a real one later
