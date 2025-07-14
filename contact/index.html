@@ -8,21 +8,34 @@
 </head>
 <body class="bg-white text-gray-900">
   <!-- Header/Nav -->
-  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10">
-    <div class="container mx-auto flex justify-between items-center">
+  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
+    <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="text-xl font-bold">
         <a href="/" class="hover:text-gray-300">Robert Hollands</a>
       </div>
-        <nav>
-          <ul class="flex space-x-6 text-sm md:text-base">
-            <li><a href="/#education" class="hover:text-gray-300">Education</a></li>
-            <li><a href="/#experience" class="hover:text-gray-300">Experience</a></li>
-            <li><a href="/#ctfs" class="hover:text-gray-300">CTFs</a></li>
-            <li><a href="/#homelab" class="hover:text-gray-300">Homelab</a></li>
-             <li><a href="/contact/" class="text-gray-300 font-semibold">Contact</a></li>
-          </ul>
-        </nav>
-      </div>
+      <!-- Hamburger Button -->
+      <button id="nav-toggle" class="md:hidden focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <!-- Nav Links -->
+      <nav id="nav-menu" class="hidden md:flex flex-row justify-between items-center w-full bg-gray-900 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0">
+        <a href="/#education" class="hover:text-gray-300">Education</a>
+        <a href="/#experience" class="hover:text-gray-300">Experience</a>
+        <a href="/#ctfs" class="hover:text-gray-300">CTFs</a>
+        <a href="/#homelab" class="hover:text-gray-300">Homelab</a>
+        <a href="/contact/" class="text-gray-300 font-semibold">Contact</a>
+      </nav>
+    </div>
+    <script>
+      const toggleBtn = document.getElementById('nav-toggle');
+      const menu = document.getElementById('nav-menu');
+      toggleBtn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+      });
+    </script>
   </header>
 
   <main class="pt-24 pb-16 flex justify-center px-4">
@@ -50,4 +63,3 @@
   </main>
 </body>
 </html>
-
