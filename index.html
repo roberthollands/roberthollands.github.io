@@ -1,18 +1,104 @@
----
-layout: default
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Robert Hollands | Cybersecurity Portfolio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      margin: 0;
+      padding: 40px;
+    }
+    h1, h2 {
+      color: #fff;
+    }
+    .intro {
+      text-align: center;
+      max-width: 800px;
+      margin: auto;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 40px;
+      margin-top: 40px;
+    }
+    .section {
+      flex: 1;
+      min-width: 280px;
+    }
+    .certs, .education {
+      text-align: center;
+    }
+    .certs img {
+      width: 80px;
+      margin: 10px;
+    }
+    .button {
+      background-color: #007acc;
+      color: white;
+      padding: 12px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    .button:hover {
+      background-color: #005f99;
+    }
+    hr {
+      margin: 40px auto;
+      border: 0;
+      height: 1px;
+      background: #333;
+      width: 80%;
+    }
+  </style>
+</head>
+<body>
 
-<div class="posts">
-  {% for post in site.posts %}
-    <article class="post">
+  <div class="intro">
+    <h1>Robert Hollands</h1>
+    <h2>Cybersecurity Professional</h2>
+    <p>
+      Detail-oriented and security-focused IT professional with hands-on experience in endpoint compliance, 
+      access control, vulnerability remediation, and user lifecycle automation. 
+      I currently manage enterprise device compliance and identity provisioning across macOS and Windows 
+      using Jamf Pro, Intune, and Entra ID.
+    </p>
+    <a class="button" href="/Resume2025RHollands.pdf" target="_blank">📄 Download My Resume (PDF)</a>
+  </div>
 
-      <h1><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></h1>
+  <div class="grid">
+    <div class="section certs">
+      <h2>Certifications</h2>
+      <img src="/images/CySA.png" alt="CySA+">
+      <img src="/images/Sec+.png" alt="Security+">
+      <img src="/images/200Jamf.png" alt="Jamf 200">
+    </div>
 
-      <div class="entry">
-        {{ post.excerpt }}
-      </div>
+    <div class="section education">
+      <h2>Education</h2>
+      <p><strong>B.S. in Cybersecurity</strong><br>
+      Augusta University<br>
+      Expected December 2025</p>
+      <p><strong>Cyber Defender Certificate</strong><br>
+      Augusta University, 2023</p>
+      <p><em>Relevant Courses:</em><br>
+        TCP/IP Analysis, OS Admin, Digital Forensics, Scripting, Countermeasures, DB Admin
+      </p>
+    </div>
+  </div>
 
-      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
-    </article>
-  {% endfor %}
-</div>
+  <hr>
+
+  <div class="intro">
+    <p>Explore more: CTF writeups, lab builds, automation scripts, and more coming soon.</p>
+  </div>
+
+</body>
+</html>
