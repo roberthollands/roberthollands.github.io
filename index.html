@@ -98,7 +98,7 @@
                   <p class="text-gray-500">Augusta University</p>
                 </div>
               </li>
-              <li class="flex items-center space-x-4">
+              <li class="flex items-centered space-x-4">
                 <img class="w-14 h-14" src="/images/grad.png" alt="Graduation Cap">
                 <div>
                   <p class="text-lg font-medium">Cyber Defender Certificate</p>
@@ -120,7 +120,7 @@
                 <img class="w-6 h-6" src="/images/taxslayer.png" alt="TaxSlayer Logo">
                 <span>Help Desk Engineer at TaxSlayer</span>
               </h3>
-              <p class="text-sm text-gray-500 mb-2">September 2024 – Present</p>
+              <p class="text-sm text-gray-500 mb-2">September 2024 &ndash; Present</p>
               <p class="mb-2">
                 Deploy patching scripts, applications, and security policies via Microsoft Intune, Jamf Pro, and ConnectWise Automate. Manage user onboarding/offboarding, imaging, and access control across hybrid macOS and Windows environments using Entra ID and Active Directory.
               </p>
@@ -149,13 +149,17 @@
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         Toastify({
-          text: '<img src="/images/pdf-logo.png" alt="PDF" style="width:16px; vertical-align:middle; margin-right:8px;"> <a href="/resume.pdf" style="color:#fff; text-decoration:underline;">Want the resume in PDF? Click here</a>',
+          text: '<span style="display:inline-flex; align-items:center;"><img src="/images/pdf-logo.png" alt="PDF" style="width:16px; margin-right:8px;">Want the resume in PDF? Click here</span>',
           duration: -1,
           escapeMarkup: false,
           gravity: 'top',
           position: 'left',
           close: true,
-          style: { background: '#ef4444', color: '#fff' },
+          style: { 
+            background: 'linear-gradient(to right, #ec4899, #f472b6)',
+            color: '#fff',
+            width: '280px'
+          },
           offset: { x: 20, y: 60 }
         }).showToast();
       });
