@@ -120,7 +120,7 @@
                 <img class="w-6 h-6" src="/images/taxslayer.png" alt="TaxSlayer Logo">
                 <span>Help Desk Engineer at TaxSlayer</span>
               </h3>
-              <p class="text-sm text-gray-500 mb-2">September 2024 &ndash; Present</p>
+              <p class="text-sm text-gray-500 mb-2">September 2024 – Present</p>
               <p class="mb-2">
                 Deploy patching scripts, applications, and security policies via Microsoft Intune, Jamf Pro, and ConnectWise Automate. Manage user onboarding/offboarding, imaging, and access control across hybrid macOS and Windows environments using Entra ID and Active Directory.
               </p>
@@ -149,18 +149,15 @@
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         Toastify({
-          text: '📄 Download resume? <a href="/resume.pdf" style="color:#fff; text-decoration:underline;">Yes</a> <span id="toast-no" style="margin-left:1rem; cursor:pointer;">No</span>',
+          text: '<img src="/images/pdf-logo.png" alt="PDF" style="width:16px; vertical-align:middle; margin-right:8px;"> <a href="/resume.pdf" style="color:#fff; text-decoration:underline;">Want the resume in PDF? Click here</a>',
           duration: -1,
           escapeMarkup: false,
           gravity: 'top',
-          position: 'center',
-          close: false,
-          style: { background: 'linear-gradient(to right, #4b5563, #6b7280)' }
+          position: 'left',
+          close: true,
+          style: { background: '#ef4444', color: '#fff' },
+          offset: { x: 20, y: 60 }
         }).showToast();
-        document.getElementById('toast-no').addEventListener('click', () => {
-          const toastEl = document.querySelector('.toastify');
-          if (toastEl) toastEl.style.display = 'none';
-        });
       });
     </script>
   </body>
