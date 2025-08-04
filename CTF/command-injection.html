@@ -11,17 +11,19 @@
 <body class="bg-white text-gray-900">
 
   <!-- Header/Nav -->
-  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10">
+  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="text-xl font-bold">
         <a href="/" class="hover:text-gray-300">Robert Hollands</a>
       </div>
+      <!-- Hamburger Button -->
       <button id="nav-toggle" class="md:hidden focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
+      <!-- Nav Links -->
       <nav
         id="nav-menu"
         class="hidden md:flex flex-row justify-between items-center w-full bg-gray-900 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0"
@@ -35,10 +37,11 @@
       </nav>
     </div>
     <script>
-      document.getElementById('nav-toggle')
-        .addEventListener('click', () =>
-          document.getElementById('nav-menu').classList.toggle('hidden')
-        )
+      const toggleBtn = document.getElementById("nav-toggle");
+      const menu = document.getElementById("nav-menu");
+      toggleBtn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+      });
     </script>
   </header>
 
@@ -65,11 +68,11 @@
         </div>
       </div>
 
-      <!-- Step 1: Authenticate as guest -->
+      <!-- Step 1 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 1: Authenticate as guest</h2>
         <p class="mb-4">
-          We need a valid session to test file operations. Provided credentials <code>guest:guest</code>.
+          We need a valid session to test file operations. Provided credentials: <code>guest:guest</code>.
         </p>
         <a href="/images/CI1.png" target="_blank" rel="noopener">
           <img src="/images/CI1.png" alt="Login panel" class="w-full rounded-lg shadow-md mb-4 cursor-pointer">
@@ -78,29 +81,29 @@
           <img src="/images/CI2.png" alt="Entering guest credentials" class="w-full rounded-lg shadow-md mb-4 cursor-pointer">
         </a>
         <p class="mb-4">
-          CI3.png shows successful login: our file list and the actions panel are visible.
+          CI3.png shows successful login: our file list and actions panel appear.
         </p>
         <a href="/images/CI3.png" target="_blank" rel="noopener">
           <img src="/images/CI3.png" alt="Dashboard after login" class="w-full rounded-lg shadow-md cursor-pointer">
         </a>
       </section>
 
-      <!-- Step 2: Examine actions panel -->
+      <!-- Step 2 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 2: Examine actions panel</h2>
         <p class="mb-4">
-          The panel offers copy and function operations—our injection entry point.
+          The panel lets us copy files and invoke a function—our injection vector.
         </p>
         <a href="/images/CI4.png" target="_blank" rel="noopener">
           <img src="/images/CI4.png" alt="Actions allowed panel" class="w-full rounded-lg shadow-md cursor-pointer">
         </a>
       </section>
 
-      <!-- Step 3: Write to tmp folder -->
+      <!-- Step 3 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 3: Write to tmp folder</h2>
         <p class="mb-4">
-          We test writing into <code>/var/www/html/files/tmp</code>, which succeeds without restriction.
+          Writing into <code>/var/www/html/files/tmp</code> succeeds without restrictions.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/images/CI5.png" target="_blank" rel="noopener">
@@ -112,11 +115,11 @@
         </div>
       </section>
 
-      <!-- Step 4: Path restriction enforcement -->
+      <!-- Step 4 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 4: Path restriction enforcement</h2>
         <p class="mb-4">
-          Writing outside tmp (e.g., <code>/tmp</code>) triggers a malicious block error.
+          Attempting to write outside tmp (e.g. <code>/tmp</code>) is blocked as malicious.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/images/CI7.png" target="_blank" rel="noopener">
@@ -128,18 +131,18 @@
         </div>
       </section>
 
-      <!-- Step 5: Identify injection point -->
+      <!-- Step 5 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 5: Identify injection point</h2>
         <p class="mb-4">
-          Burp intercept shows the move parameter in the URL after <code>index.php</code>; we can append shell operators there.
+          Burp shows the <code>move</code> parameter in the URL after <code>index.php</code>. We can append shell operators here.
         </p>
         <a href="/images/CI9.png" target="_blank" rel="noopener">
           <img src="/images/CI9.png" alt="Burp intercept showing URL" class="w-full rounded-lg shadow-md cursor-pointer">
         </a>
       </section>
 
-      <!-- Step 6: Operator reference -->
+      <!-- Step 6 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 6: Operator reference</h2>
         <p class="mb-4">
@@ -175,11 +178,11 @@
         </div>
       </section>
 
-      <!-- Step 7: Blacklist bypass -->
+      <!-- Step 7 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 7: Blacklist bypass</h2>
         <p class="mb-4">
-          The <code>whoami</code> command is blocked. We obfuscate it using quotes and whitespace expansion.
+          The <code>whoami</code> command is blocked. We obfuscate it using quotes and whitespace.
         </p>
         <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
 ?to=tmp$IFS%26w'h'oa'm'i&from=78113764.txt&finish=&move=
@@ -189,11 +192,11 @@
         </a>
       </section>
 
-      <!-- Step 8: Directory enumeration -->
+      <!-- Step 8 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 8: Directory enumeration</h2>
         <p class="mb-4">
-          We list the home directory, including hidden files.
+          We list the home directory entries, including hidden files.
         </p>
         <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
 ?to=tmp$IFS%26l's'$IFS'-a'${HOME:0:1}&from=787113764.txt&finish=&move=
@@ -203,7 +206,7 @@
         </a>
       </section>
 
-      <!-- Step 9: Flag extraction -->
+      <!-- Step 9 -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 9: Flag extraction</h2>
         <p class="mb-4">
