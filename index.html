@@ -13,88 +13,60 @@
 
     <!-- Custom theme + effects -->
     <style>
-      :root {
-        --bg1: #0b1220;
-        --bg2: #0f1b2d;
-        --accent: #22d3ee;  /* cyan-400 */
-        --accent2: #10b981; /* emerald-500 */
+      :root{
+        --bg1:#0b1220;
+        --bg2:#0f1b2d;
+        --accent:#22d3ee;  /* cyan-400 */
+        --accent2:#10b981; /* emerald-500 */
       }
-      html, body { height: 100%; }
-      body.theme-dark {
-        color: #e5e7eb;
-        background: linear-gradient(180deg, var(--bg1), var(--bg2));
-        overflow-x: hidden;
-        position: relative;
+      html,body{height:100%}
+      body.theme-dark{
+        color:#e5e7eb;
+        background:linear-gradient(180deg,var(--bg1),var(--bg2));
+        overflow-x:hidden;
+        position:relative;
       }
 
-      /* ---------- MATRIX CANVAS & SCRIM ---------- */
-      #matrix-canvas {
-        position: fixed;
-        inset: 0;
-        z-index: 0;       /* behind everything */
-        opacity: 0.18;    /* subtle */
-        pointer-events: none;
+      /* ---------- MATRIX CANVAS & SCRIM (keeps code off content) ---------- */
+      #matrix-canvas{
+        position:fixed; inset:0; z-index:0; opacity:.18; pointer-events:none;
       }
-      /* Dark scrim to block matrix directly under content;
-         center is opaque, edges fade so matrix is visible around. */
-      .matrix-scrim {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 1; /* above canvas, below content */
+      .matrix-scrim{
+        position:fixed; inset:0; pointer-events:none; z-index:1;
         background:
           radial-gradient(ellipse at 50% 20%,
-            rgba(11,18,32,0.92) 0%,
-            rgba(11,18,32,0.92) 35%,
-            rgba(11,18,32,0.75) 52%,
-            rgba(11,18,32,0.45) 65%,
-            rgba(11,18,32,0.15) 78%,
+            rgba(11,18,32,.92) 0%,
+            rgba(11,18,32,.92) 35%,
+            rgba(11,18,32,.75) 52%,
+            rgba(11,18,32,.45) 65%,
+            rgba(11,18,32,.15) 78%,
             rgba(11,18,32,0) 100%);
       }
 
       /* ---------- Nav hover color ---------- */
-      .site-nav a {
-        transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
-      }
-      .site-nav a:hover,
-      .site-nav a:focus-visible {
-        color: var(--accent);
-      }
+      .site-nav a{transition:color .2s ease,transform .2s ease}
+      .site-nav a:hover,.site-nav a:focus-visible{color:var(--accent)}
 
       /* ---------- Hover spin for profile + certs ---------- */
-      @keyframes spin-slow {
-        to { transform: rotate(360deg); }
-      }
-      .hover-spin { will-change: transform; }
-      .hover-spin:hover {
-        animation: spin-slow 6s linear infinite;
-      }
+      @keyframes spin-slow{to{transform:rotate(360deg)}}
+      .hover-spin{will-change:transform}
+      .hover-spin:hover{animation:spin-slow 6s linear infinite}
 
-      /* Clicky lift effect for non-spinning assets */
-      .clicky {
-        cursor: pointer;
-        transition: transform .2s ease, filter .2s ease;
-      }
-      .clicky:hover {
-        transform: translateY(-2px) scale(1.02);
-        filter: drop-shadow(0 6px 12px rgba(0,0,0,.35));
-      }
-      /* IMPORTANT: when an element spins, do NOT also scale/translate it */
-      .hover-spin.clicky:hover {
-        transform: none;
-        filter: none;
-      }
+      /* Lift effect for non-spinning assets */
+      .clicky{cursor:pointer;transition:transform .2s ease,filter .2s ease}
+      .clicky:hover{transform:translateY(-2px) scale(1.02);filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
+      /* Don’t override spin with lift */
+      .hover-spin.clicky:hover{transform:none;filter:none}
 
-      /* Readability tweaks on dark */
-      .theme-dark .text-gray-900,
-      .theme-dark .text-black { color: #e5e7eb; }
-      .theme-dark .text-gray-700 { color: #e5e7eb; }
-      .theme-dark .text-gray-500 { color: #cbd5e1; }
-      .theme-dark .bg-white { background-color: rgba(255,255,255,0.02); }
-      .theme-dark .bg-gray-50 { background-color: rgba(255,255,255,0.04); }
-      .theme-dark .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5); }
+      /* Readability on dark */
+      .theme-dark .text-gray-900,.theme-dark .text-black{color:#e5e7eb}
+      .theme-dark .text-gray-700{color:#e5e7eb}
+      .theme-dark .text-gray-500{color:#cbd5e1}
+      .theme-dark .bg-white{background-color:rgba(255,255,255,.02)}
+      .theme-dark .bg-gray-50{background-color:rgba(255,255,255,.04)}
+      .theme-dark .shadow-sm{box-shadow:0 1px 3px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.5)}
 
-      header, main, footer { position: relative; z-index: 2; } /* sit above scrim */
+      header,main,footer{position:relative;z-index:2} /* above scrim */
     </style>
   </head>
 
@@ -129,11 +101,9 @@
         </nav>
       </div>
       <script>
-        const toggleBtn = document.getElementById('nav-toggle');
-        const menu = document.getElementById('nav-menu');
-        toggleBtn.addEventListener('click', () => {
-          menu.classList.toggle('hidden');
-        });
+        const toggleBtn=document.getElementById('nav-toggle');
+        const menu=document.getElementById('nav-menu');
+        toggleBtn.addEventListener('click',()=>{menu.classList.toggle('hidden')});
       </script>
     </header>
 
@@ -146,10 +116,10 @@
       <h1 class="text-2xl font-bold">Robert Hollands</h1>
       <div class="flex space-x-6">
         <a href="https://github.com/roberthollands" target="_blank" rel="noopener">
-          <img class="w-10 h-10 clicky" src="/images/github.png" alt="GitHub">
+          <img class="w-10 h-10 clicky" src="/images/HERE/githubwhite.png" alt="GitHub">
         </a>
         <a href="https://www.linkedin.com/in/robert-hollands" target="_blank" rel="noopener">
-          <img class="w-10 h-10 clicky" src="/images/linkedin.png" alt="LinkedIn">
+          <img class="w-10 h-10 clicky" src="/images/HERE/linkedinwhite.png" alt="LinkedIn">
         </a>
       </div>
 
@@ -192,14 +162,14 @@
             <h2 class="text-xl font-bold mb-4 text-center">Education</h2>
             <ul class="space-y-6">
               <li class="flex items-center space-x-4">
-                <img class="w-14 h-14 clicky" src="/images/grad.png" alt="Graduation Cap">
+                <img class="w-14 h-14 clicky" src="/images/HERE/gradewhite.png" alt="Graduation Cap">
                 <div>
                   <p class="text-lg font-medium">B.S. in Cyber Security</p>
                   <p class="text-gray-500">Augusta University</p>
                 </div>
               </li>
               <li class="flex items-centered space-x-4">
-                <img class="w-14 h-14 clicky" src="/images/grad.png" alt="Graduation Cap">
+                <img class="w-14 h-14 clicky" src="/images/HERE/gradewhite.png" alt="Graduation Cap">
                 <div>
                   <p class="text-lg font-medium">Advanced Cyber Defender Certificate</p>
                   <p class="text-gray-500">Augusta University</p>
@@ -249,77 +219,63 @@
 
     <!-- Matrix rain script -->
     <script>
-      (function () {
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
+      (function(){
+        const canvas=document.getElementById('matrix-canvas');
+        const ctx=canvas.getContext('2d');
+        let w,h,cols,yPos;
+        const fontSize=16;      // density
+        const speed=40;         // lower = slower (ms)
+        const chars='アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$@#%&*{}[]<>/|\\\\+-=_?';
 
-        let w, h, cols, yPos;
-        const fontSize = 16;       // character size
-        const speed = 40;         // lower is slower (ms)
-        const chars = 'アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$@#%&*{}[]<>/|\\+-=_?';
-
-        function resize() {
-          w = canvas.width = window.innerWidth;
-          h = canvas.height = window.innerHeight;
-          cols = Math.floor(w / fontSize);
-          yPos = Array(cols).fill(0);
+        function resize(){
+          w=canvas.width=window.innerWidth;
+          h=canvas.height=window.innerHeight;
+          cols=Math.floor(w/fontSize);
+          yPos=Array(cols).fill(0);
         }
         resize();
-        window.addEventListener('resize', resize);
+        window.addEventListener('resize',resize);
 
-        function draw() {
-          // Subtle trail
-          ctx.fillStyle = 'rgba(11,18,32,0.20)'; // trail fade
-          ctx.fillRect(0, 0, w, h);
-
-          ctx.font = fontSize + 'px monospace';
-          for (let i = 0; i < cols; i++) {
-            const text = chars.charAt(Math.floor(Math.random() * chars.length));
-            // green-cyan mix
-            ctx.fillStyle = Math.random() > 0.5 ? 'rgba(34,211,238,0.75)' : 'rgba(16,185,129,0.75)';
-            ctx.fillText(text, i * fontSize, yPos[i] * fontSize);
-
-            // Reset at random to keep it organic
-            if (yPos[i] * fontSize > h && Math.random() > 0.975) {
-              yPos[i] = 0;
-            } else {
-              yPos[i]++;
-            }
+        function draw(){
+          ctx.fillStyle='rgba(11,18,32,0.20)';
+          ctx.fillRect(0,0,w,h);
+          ctx.font=fontSize+'px monospace';
+          for(let i=0;i<cols;i++){
+            const ch=chars.charAt(Math.floor(Math.random()*chars.length));
+            ctx.fillStyle=Math.random()>0.5?'rgba(34,211,238,0.75)':'rgba(16,185,129,0.75)';
+            ctx.fillText(ch,i*fontSize,yPos[i]*fontSize);
+            if(yPos[i]*fontSize>h && Math.random()>0.975){ yPos[i]=0; } else { yPos[i]++; }
           }
         }
-
-        // gentle cadence
-        let rafId;
-        function loop() {
-          draw();
-          rafId = setTimeout(() => requestAnimationFrame(loop), speed);
-        }
+        function loop(){ draw(); setTimeout(()=>requestAnimationFrame(loop),speed); }
         loop();
       })();
     </script>
 
+    <!-- Toast (throttled, pinned above everything) -->
     <script>
-      // Toast (unchanged)
-      document.addEventListener('DOMContentLoaded', () => {
-        const ts = localStorage.getItem('resumeToastTs');
-        const now = Date.now();
-        if (!ts || now - parseInt(ts, 10) > 15 * 60 * 1000) {
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const STORAGE_KEY='resumeToastTs_v2';
+        const ts=localStorage.getItem(STORAGE_KEY);
+        const now=Date.now();
+        if(!ts || now-parseInt(ts,10)>15*60*1000){
           Toastify({
-            text: '<span style="display:inline-flex; align-items:center;"><a href="/RobertHollandsResume.pdf" target="_blank" rel="noopener" download="RobertHollandsResume.pdf" style="display:inline-flex; align-items:center; color:#fff; text-decoration:none;"><img src="/images/pdf-logo.png" alt="PDF" style="width:16px; margin-right:8px;">Want the resume in PDF? Click here</a></span>',
-            duration: 7000,
-            escapeMarkup: false,
-            gravity: 'top',
-            position: 'left',
-            close: true,
-            style: {
-              background: 'linear-gradient(90deg, #22d3ee, #10b981)',
-              color: '#fff',
-              whiteSpace: 'nowrap',
-              maxWidth: 'calc(100% - 40px)'
+            text:'<span style="display:inline-flex; align-items:center;"><a href="/RobertHollandsResume.pdf" target="_blank" rel="noopener" download="RobertHollandsResume.pdf" style="display:inline-flex; align-items:center; color:#fff; text-decoration:none;"><img src="/images/pdf-logo.png" alt="PDF" style="width:16px; margin-right:8px;">Want the resume in PDF? Click here</a></span>',
+            duration:7000,
+            escapeMarkup:false,
+            gravity:'top',
+            position:'left',
+            close:true,
+            style:{
+              background:'linear-gradient(90deg, #22d3ee, #10b981)',
+              color:'#fff',
+              whiteSpace:'nowrap',
+              maxWidth:'calc(100% - 40px)',
+              zIndex:2147483647
             },
-            offset: { x: 20, y: 60 }
+            offset:{x:20,y:60}
           }).showToast();
-          localStorage.setItem('resumeToastTs', now.toString());
+          localStorage.setItem(STORAGE_KEY, now.toString());
         }
       });
     </script>
