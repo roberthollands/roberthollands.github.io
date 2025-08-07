@@ -13,90 +13,46 @@
 
     <!-- Custom theme + effects -->
     <style>
-      /* ---------- Security vibe background ---------- */
       :root {
-        --bg1: #0b1220;   /* deep navy */
-        --bg2: #0f1b2d;   /* slate navy */
-        --accent: #22d3ee;/* cyan-400 */
-        --accent2: #10b981;/* emerald-500 */
+        --bg1: #0b1220;
+        --bg2: #0f1b2d;
+        --accent: #22d3ee;  /* cyan-400 */
+        --accent2: #10b981; /* emerald-500 */
       }
-      html, body {
-        height: 100%;
-      }
+      html, body { height: 100%; }
       body.theme-dark {
-        color: #e5e7eb; /* slate-200 */
-        background: radial-gradient(1200px 800px at 20% -10%, rgba(34,211,238,0.10), transparent 60%),
-                    radial-gradient(900px 600px at 90% 10%, rgba(16,185,129,0.08), transparent 60%),
-                    linear-gradient(180deg, var(--bg1), var(--bg2));
+        color: #e5e7eb;
+        background: linear-gradient(180deg, var(--bg1), var(--bg2));
         overflow-x: hidden;
         position: relative;
       }
 
-      /* Subtle animated geometric layers (non-interactive) */
-      .geo-bg,
-      .geo-bg::before,
-      .geo-bg::after {
-        content: "";
+      /* ---------- MATRIX CANVAS & SCRIM ---------- */
+      #matrix-canvas {
         position: fixed;
-        inset: -10% -10% -10% -10%;
+        inset: 0;
+        z-index: 0;       /* behind everything */
+        opacity: 0.18;    /* subtle */
         pointer-events: none;
-        z-index: 0;
       }
-      /* slow gradient drift */
-      .geo-bg {
+      /* Dark scrim to block matrix directly under content;
+         center is opaque, edges fade so matrix is visible around. */
+      .matrix-scrim {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1; /* above canvas, below content */
         background:
-          radial-gradient(800px 800px at 70% 30%, rgba(34,211,238,0.08), transparent 40%),
-          radial-gradient(700px 700px at 15% 65%, rgba(16,185,129,0.07), transparent 45%);
-        animation: drift 36s linear infinite;
-      }
-      @keyframes drift {
-        0%   { transform: translate3d(0,0,0) rotate(0deg); }
-        50%  { transform: translate3d(0,-1.5%,0) rotate(1deg); }
-        100% { transform: translate3d(0,0,0) rotate(0deg); }
-      }
-
-      /* faint isometric grid */
-      .geo-bg::before {
-        background:
-          linear-gradient(transparent 97%, rgba(255,255,255,0.05) 97%) 0 0/100% 20px,
-          linear-gradient(90deg, transparent 97%, rgba(255,255,255,0.05) 97%) 0 0/20px 100%;
-        opacity: .35;
-        mix-blend-mode: overlay;
-        animation: grid-pan 60s linear infinite;
-      }
-      @keyframes grid-pan {
-        0%   { transform: translateY(0); }
-        100% { transform: translateY(-20px); }
+          radial-gradient(ellipse at 50% 20%,
+            rgba(11,18,32,0.92) 0%,
+            rgba(11,18,32,0.92) 35%,
+            rgba(11,18,32,0.75) 52%,
+            rgba(11,18,32,0.45) 65%,
+            rgba(11,18,32,0.15) 78%,
+            rgba(11,18,32,0) 100%);
       }
 
-      /* slow-moving geometric shapes */
-      .geo-bg::after {
-        background:
-          radial-gradient(60px 60px at 12% 30%, rgba(34,211,238,0.18), transparent 60%),
-          radial-gradient(80px 80px at 78% 22%, rgba(16,185,129,0.16), transparent 60%),
-          radial-gradient(70px 70px at 40% 80%, rgba(34,211,238,0.12), transparent 60%),
-          radial-gradient(55px 55px at 90% 75%, rgba(16,185,129,0.12), transparent 60%);
-        filter: blur(2px);
-        animation: floaty 48s ease-in-out infinite;
-      }
-      @keyframes floaty {
-        0%   { transform: translate3d(0,0,0) }
-        25%  { transform: translate3d(0,-2%,0) }
-        50%  { transform: translate3d(0,-1%,0) }
-        75%  { transform: translate3d(0,-2.5%,0) }
-        100% { transform: translate3d(0,0,0) }
-      }
-
-      /* ---------- Readability overrides on dark ---------- */
-      .theme-dark .text-gray-900,
-      .theme-dark .text-black { color: #e5e7eb; }      /* main text lighter */
-      .theme-dark .text-gray-700 { color: #e5e7eb; }   /* paragraphs */
-      .theme-dark .text-gray-500 { color: #cbd5e1; }   /* subtext */
-      .theme-dark .bg-white { background-color: rgba(255,255,255,0.02); }
-      .theme-dark .bg-gray-50 { background-color: rgba(255,255,255,0.04); }
-      .theme-dark .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5); }
-
-      /* ---------- Navigation hover + focus ---------- */
+      /* ---------- Nav hover color ---------- */
       .site-nav a {
         transition: color .2s ease, background-color .2s ease, border-color .2s ease, transform .2s ease;
       }
@@ -109,15 +65,12 @@
       @keyframes spin-slow {
         to { transform: rotate(360deg); }
       }
-      .hover-spin {
-        transition: transform .3s ease;
-        will-change: transform;
-      }
+      .hover-spin { will-change: transform; }
       .hover-spin:hover {
         animation: spin-slow 6s linear infinite;
       }
 
-      /* make images feel clickable */
+      /* Clicky lift effect for non-spinning assets */
       .clicky {
         cursor: pointer;
         transition: transform .2s ease, filter .2s ease;
@@ -126,15 +79,30 @@
         transform: translateY(-2px) scale(1.02);
         filter: drop-shadow(0 6px 12px rgba(0,0,0,.35));
       }
+      /* IMPORTANT: when an element spins, do NOT also scale/translate it */
+      .hover-spin.clicky:hover {
+        transform: none;
+        filter: none;
+      }
 
-      /* keep content above animated bg */
-      header, main, footer { position: relative; z-index: 1; }
+      /* Readability tweaks on dark */
+      .theme-dark .text-gray-900,
+      .theme-dark .text-black { color: #e5e7eb; }
+      .theme-dark .text-gray-700 { color: #e5e7eb; }
+      .theme-dark .text-gray-500 { color: #cbd5e1; }
+      .theme-dark .bg-white { background-color: rgba(255,255,255,0.02); }
+      .theme-dark .bg-gray-50 { background-color: rgba(255,255,255,0.04); }
+      .theme-dark .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.5); }
+
+      header, main, footer { position: relative; z-index: 2; } /* sit above scrim */
     </style>
   </head>
 
   <body class="theme-dark bg-white text-gray-900">
-    <!-- animated background layer -->
-    <div class="geo-bg" aria-hidden="true"></div>
+    <!-- MATRIX canvas -->
+    <canvas id="matrix-canvas" aria-hidden="true"></canvas>
+    <!-- SCRIM that hides matrix directly under content -->
+    <div class="matrix-scrim" aria-hidden="true"></div>
 
     <!-- Header/Nav -->
     <header class="bg-gray-900/80 backdrop-blur text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
@@ -169,6 +137,7 @@
       </script>
     </header>
 
+    <!-- Keep structure/order the same -->
     <main class="flex flex-col justify-center items-center pt-20 space-y-4">
       <!-- Profile -->
       <img class="w-48 h-48 rounded-full object-cover mb-4 hover-spin clicky"
@@ -277,11 +246,63 @@
 
     <!-- Toastify JS -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <!-- Matrix rain script -->
     <script>
+      (function () {
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let w, h, cols, yPos;
+        const fontSize = 16;       // character size
+        const speed = 40;         // lower is slower (ms)
+        const chars = 'アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$@#%&*{}[]<>/|\\+-=_?';
+
+        function resize() {
+          w = canvas.width = window.innerWidth;
+          h = canvas.height = window.innerHeight;
+          cols = Math.floor(w / fontSize);
+          yPos = Array(cols).fill(0);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        function draw() {
+          // Subtle trail
+          ctx.fillStyle = 'rgba(11,18,32,0.20)'; // trail fade
+          ctx.fillRect(0, 0, w, h);
+
+          ctx.font = fontSize + 'px monospace';
+          for (let i = 0; i < cols; i++) {
+            const text = chars.charAt(Math.floor(Math.random() * chars.length));
+            // green-cyan mix
+            ctx.fillStyle = Math.random() > 0.5 ? 'rgba(34,211,238,0.75)' : 'rgba(16,185,129,0.75)';
+            ctx.fillText(text, i * fontSize, yPos[i] * fontSize);
+
+            // Reset at random to keep it organic
+            if (yPos[i] * fontSize > h && Math.random() > 0.975) {
+              yPos[i] = 0;
+            } else {
+              yPos[i]++;
+            }
+          }
+        }
+
+        // gentle cadence
+        let rafId;
+        function loop() {
+          draw();
+          rafId = setTimeout(() => requestAnimationFrame(loop), speed);
+        }
+        loop();
+      })();
+    </script>
+
+    <script>
+      // Toast (unchanged)
       document.addEventListener('DOMContentLoaded', () => {
         const ts = localStorage.getItem('resumeToastTs');
         const now = Date.now();
-        // Show if never shown or more than 15 minutes have passed
         if (!ts || now - parseInt(ts, 10) > 15 * 60 * 1000) {
           Toastify({
             text: '<span style="display:inline-flex; align-items:center;"><a href="/RobertHollandsResume.pdf" target="_blank" rel="noopener" download="RobertHollandsResume.pdf" style="display:inline-flex; align-items:center; color:#fff; text-decoration:none;"><img src="/images/pdf-logo.png" alt="PDF" style="width:16px; margin-right:8px;">Want the resume in PDF? Click here</a></span>',
