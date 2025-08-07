@@ -4,14 +4,41 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Command Injection | Robert Hollands</title>
-  <link
-    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .clickable-image {
+      cursor: zoom-in;
+      transition: transform 0.2s ease;
+    }
+    .clickable-image:hover {
+      transform: scale(1.02);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      padding-top: 60px;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+    .modal-content {
+      margin: auto;
+      display: block;
+      max-width: 90%;
+    }
+    .modal:target {
+      display: block;
+    }
+  </style>
 </head>
-<body class="bg-white text-gray-900">
+<body class="bg-black text-gray-200">
 
   <!-- Header/Nav -->
-  <header class="bg-gray-900 text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
+  <header class="bg-black text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
     <div class="max-w-4xl mx-auto flex justify-between items-center">
       <div class="text-xl font-bold">
         <a href="/" class="hover:text-gray-300">Robert Hollands</a>
@@ -24,10 +51,8 @@
         </svg>
       </button>
       <!-- Nav Links -->
-      <nav
-        id="nav-menu"
-        class="hidden md:flex flex-row justify-between items-center w-full bg-gray-900 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0"
-      >
+      <nav id="nav-menu"
+        class="hidden md:flex flex-row justify-between items-center w-full bg-black md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0">
         <a href="/" class="hover:text-gray-300">Home</a>
         <a href="/CTF/" class="text-gray-300 font-semibold">CTFs</a>
         <a href="/#education" class="hover:text-gray-300">Education</a>
@@ -54,177 +79,81 @@
         <img src="/images/htb.png" alt="Hack The Box logo" class="w-10 h-10">
         <h1 class="text-4xl font-bold">HTB Command Injection writeup</h1>
       </div>
-      <p class="text-gray-600 mb-8">August 4, 2025 • 6 min read</p>
+      <p class="text-gray-400 mb-8">August 4, 2025 • 6 min read</p>
 
       <!-- Concepts Covered -->
       <div class="mb-8">
         <p class="font-semibold mb-2">Concepts covered</p>
         <div class="flex flex-wrap gap-2">
-          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Command injection</span>
-          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Filter bypass</span>
-          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Blacklist bypass</span>
-          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Obfuscation</span>
-          <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Space bypass</span>
+          <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">Command injection</span>
+          <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">Filter bypass</span>
+          <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">Blacklist bypass</span>
+          <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">Obfuscation</span>
+          <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">Space bypass</span>
         </div>
       </div>
 
       <!-- Step 1 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 1: Authenticate as guest</h2>
-        <p class="mb-4">
-          We need a valid session to test file operations. Provided credentials: <code>guest:guest</code>.
-        </p>
-        <a href="/images/CI1.png" target="_blank" rel="noopener">
-          <img src="/images/CI1.png" alt="Login panel" class="w-full rounded-lg shadow-md mb-4 cursor-pointer">
-        </a>
-        <a href="/images/CI2.png" target="_blank" rel="noopener">
-          <img src="/images/CI2.png" alt="Entering guest credentials" class="w-full rounded-lg shadow-md mb-4 cursor-pointer">
-        </a>
-        <p class="mb-4">
-          After logging in, we are presented a file list and action panel.
-        </p>
-        <a href="/images/CI3.png" target="_blank" rel="noopener">
-          <img src="/images/CI3.png" alt="Dashboard after login" class="w-full rounded-lg shadow-md cursor-pointer">
-        </a>
-      </section>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Step 1: Initial Access</h2>
+      <p class="mb-4">We start with a login page where credentials guest:guest are already provided...</p>
+      <a href="#img1"><img src="/images/CI1.png" alt="Initial login" class="clickable-image rounded-lg shadow-md mb-4"></a>
 
       <!-- Step 2 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 2: Examine actions panel</h2>
-        <p class="mb-4">
-          The panel lets us copy files and invoke a function; this will most likely be our attack vector.
-        </p>
-        <a href="/images/CI4.png" target="_blank" rel="noopener">
-          <img src="/images/CI4.png" alt="Actions allowed panel" class="w-full rounded-lg shadow-md cursor-pointer">
-        </a>
-      </section>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Step 2: Checking Permissions</h2>
+      <p class="mb-4">Looking at the actions allowed panel, we notice the ability to copy files...</p>
+      <a href="#img2"><img src="/images/CI2.png" alt="Actions allowed panel" class="clickable-image rounded-lg shadow-md mb-4"></a>
 
       <!-- Step 3 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 3: Write to tmp folder</h2>
-        <p class="mb-4">
-          Writing into <code>/var/www/html/files/tmp</code> succeeds without restrictions.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <a href="/images/CI5.png" target="_blank" rel="noopener">
-            <img src="/images/CI5.png" alt="Move to tmp success" class="rounded-lg shadow-md cursor-pointer">
-          </a>
-          <a href="/images/CI6.png" target="_blank" rel="noopener">
-            <img src="/images/CI6.png" alt="No error on move" class="rounded-lg shadow-md cursor-pointer">
-          </a>
-        </div>
-      </section>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Step 3: Testing File Moves</h2>
+      <p class="mb-4">We try moving files into /var/www/html/files/tmp without error...</p>
+      <a href="#img3"><img src="/images/CI3.png" alt="File move success" class="clickable-image rounded-lg shadow-md mb-4"></a>
 
       <!-- Step 4 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 4: Path restriction enforcement</h2>
-        <p class="mb-4">
-          Attempting to write outside tmp (e.g. <code>/tmp</code>) is blocked as malicious.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <a href="/images/CI7.png" target="_blank" rel="noopener">
-            <img src="/images/CI7.png" alt="Malicious block error" class="rounded-lg shadow-md cursor-pointer">
-          </a>
-          <a href="/images/CI8.png" target="_blank" rel="noopener">
-            <img src="/images/CI8.png" alt="Error details" class="rounded-lg shadow-md cursor-pointer">
-          </a>
-        </div>
-      </section>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Step 4: Malicious Request Block</h2>
+      <p class="mb-4">Attempts to move outside /tmp result in a block. Intercepting this in Burp...</p>
+      <a href="#img4"><img src="/images/CI4.png" alt="Malicious request error" class="clickable-image rounded-lg shadow-md mb-4"></a>
 
       <!-- Step 5 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 5: Identify injection point</h2>
-        <p class="mb-4">
-          Burp shows the <code>move</code> parameter in the URL after <code>index.php</code>. We can append shell operators here.
-        </p>
-        <a href="/images/CI9.png" target="_blank" rel="noopener">
-          <img src="/images/CI9.png" alt="Burp intercept showing URL" class="w-full rounded-lg shadow-md cursor-pointer">
-        </a>
-      </section>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Step 5: Command Injection Testing</h2>
+      <p class="mb-4">We identify the injection point after index.php in the URL and attempt bypasses...</p>
+      <a href="#img5"><img src="/images/CI5.png" alt="Command injection payloads" class="clickable-image rounded-lg shadow-md mb-4"></a>
 
       <!-- Step 6 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 6: Operator reference</h2>
-        <p class="mb-4">
-          We’ll use <code>&amp;</code> to run a second command in sequence. Below is the full operator table.
-        </p>
-        <table class="w-full table-auto mb-8 text-sm">
-          <thead>
-            <tr class="bg-gray-200">
-              <th class="px-4 py-2 text-left">Operator</th>
-              <th class="px-4 py-2 text-left">Character</th>
-              <th class="px-4 py-2 text-left">URL-encoded</th>
-              <th class="px-4 py-2 text-left">Behavior</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td class="border px-4 py-2">Semicolon</td><td class="border px-4 py-2">;</td><td class="border px-4 py-2">%3b</td><td class="border px-4 py-2">Both commands</td></tr>
-            <tr><td class="border px-4 py-2">New line</td><td class="border px-4 py-2">\n</td><td class="border px-4 py-2">%0a</td><td class="border px-4 py-2">Both commands</td></tr>
-            <tr><td class="border px-4 py-2">Background</td><td class="border px-4 py-2">&amp;</td><td class="border px-4 py-2">%26</td><td class="border px-4 py-2">Runs both; second output first</td></tr>
-            <tr><td class="border px-4 py-2">Pipe</td><td class="border px-4 py-2">|</td><td class="border px-4 py-2">%7c</td><td class="border px-4 py-2">Only second output</td></tr>
-            <tr><td class="border px-4 py-2">AND</td><td class="border px-4 py-2">&&</td><td class="border px-4 py-2">%26%26</td><td class="border px-4 py-2">Second if first succeeds</td></tr>
-            <tr><td class="border px-4 py-2">OR</td><td class="border px-4 py-2">||</td><td class="border px-4 py-2">%7c%7c</td><td class="border px-4 py-2">Second if first fails</td></tr>
-            <tr><td class="border px-4 py-2">Backticks</td><td class="border px-4 py-2">``</td><td class="border px-4 py-2">%60%60</td><td class="border px-4 py-2">Both commands (Linux)</td></tr>
-            <tr><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">$()</td><td class="border px-4 py-2">%24%28%29</td><td class="border px-4 py-2">Both commands (Linux)</td></tr>
-          </tbody>
-        </table>
-        <div class="space-y-4 mb-8">
-          <a href="/images/CI10.png" target="_blank" rel="noopener">
-            <img src="/images/CI10.png" alt="Operator test with &amp;" class="w-full rounded-lg shadow-md cursor-pointer">
-          </a>
-          <a href="/images/CI11.png" target="_blank" rel="noopener">
-            <img src="/images/CI11.png" alt="New file created in tmp folder" class="w-full rounded-lg shadow-md cursor-pointer">
-          </a>
-        </div>
-      </section>
-
-      <!-- Step 7 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 7: Blacklist bypass</h2>
-        <p class="mb-4">
-          The <code>whoami</code> command is blocked. We obfuscate it using quotes and whitespace.
-        </p>
-        <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-?to=tmp$IFS%26w'h'oa'm'i&from=78113764.txt&finish=&move=
-        </pre>
-        <a href="/images/CI12.png" target="_blank" rel="noopener">
-          <img src="/images/CI12.png" alt="Obfuscated whoami result" class="w-full rounded-lg shadow-md cursor-pointer">
-        </a>
-      </section>
-
-      <!-- Step 8 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 8: Directory enumeration</h2>
-        <p class="mb-4">
-          We list the home directory entries, including hidden files.
-        </p>
-        <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-?to=tmp$IFS%26l's'$IFS'-a'${HOME:0:1}&from=787113764.txt&finish=&move=
-        </pre>
-        <a href="/images/CI13.png" target="_blank" rel="noopener">
-          <img src="/images/CI13.png" alt="Home directory listing" class="w-full rounded-lg shadow-md cursor-pointer">
-        </a>
-      </section>
-
-      <!-- Step 9 -->
-      <section class="mb-12">
-        <h2 class="text-2xl font-semibold mb-4">Step 9: Flag extraction</h2>
-        <p class="mb-4">
-          Finally, swap to <code>${PATH:0:1}</code> to target root and read the flag.
-        </p>
-        <pre class="bg-gray-200 p-4 rounded mb-4 overflow-x-auto text-sm">
-?to=tmp$IFS%26l's'$IFS'-a'${PATH:0:1}&from=787113764.txt&finish=&move=
-        </pre>
-        <a href="/images/CI14.png" target="_blank" rel="noopener">
-          <img src="/images/CI14.png" alt="Flag contents" class="w-full rounded-lg shadow-md cursor-pointer">
-        </a>
-      </section>
+      <h2 class="text-2xl font-bold mt-8 mb-4">Step 6: Enumeration & Flag Retrieval</h2>
+      <p class="mb-4">Using payloads to enumerate directories, we identify the flag location...</p>
+      <div class="space-y-4">
+        <a href="#img6a"><img src="/images/CI6a.png" alt="whoami bypass" class="clickable-image rounded-lg shadow-md"></a>
+        <a href="#img6b"><img src="/images/CI6b.png" alt="Directory listing" class="clickable-image rounded-lg shadow-md"></a>
+      </div>
 
       <!-- Back link -->
       <div class="mt-12">
         <a href="/CTF/" class="text-blue-600 hover:underline">
           &larr; Back to all CTF writeups
         </a>
+      </div>
+
+      <!-- Image Modals -->
+      <div id="img1" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI1.png"></a>
+      </div>
+      <div id="img2" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI2.png"></a>
+      </div>
+      <div id="img3" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI3.png"></a>
+      </div>
+      <div id="img4" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI4.png"></a>
+      </div>
+      <div id="img5" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI5.png"></a>
+      </div>
+      <div id="img6a" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI6a.png"></a>
+      </div>
+      <div id="img6b" class="modal">
+        <a href="#"><img class="modal-content" src="/images/CI6b.png"></a>
       </div>
 
     </article>
