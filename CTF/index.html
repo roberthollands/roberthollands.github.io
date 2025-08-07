@@ -22,20 +22,15 @@
         position: relative;
       }
 
-      /* Matrix background and scrim (keeps code off content area) */
+      /* Matrix canvas (now stronger and full-page) */
       #matrix-canvas{
-        position:fixed; inset:0; z-index:0; opacity:.18; pointer-events:none;
+        position:fixed; inset:0; z-index:0; opacity:.33; pointer-events:none; /* was .18, now +15pp */
       }
-      .matrix-scrim{
-        position:fixed; inset:0; pointer-events:none; z-index:1;
-        background:
-          radial-gradient(ellipse at 50% 20%,
-            rgba(0,0,0,.92) 0%,
-            rgba(0,0,0,.92) 35%,
-            rgba(0,0,0,.78) 52%,
-            rgba(0,0,0,.5) 65%,
-            rgba(0,0,0,.2) 78%,
-            rgba(0,0,0,0) 100%);
+
+      /* Only block matrix under the NAV BAR (not the content) */
+      .nav-scrim{
+        position:fixed; left:0; top:0; right:0; height:72px; /* cover header zone */
+        background: #000; opacity:.95; z-index:1; pointer-events:none;
       }
 
       /* Header: translucent black, red hover on links */
@@ -54,49 +49,50 @@
         box-shadow: 0 10px 20px rgba(0,0,0,.45);
       }
 
-      /* Handle glitch effect */
+      /* Handle glitch effect: red/green and slightly stronger */
       .glitch {
         position: relative;
         display: inline-block;
         text-shadow:
-          0 0 2px rgba(239,68,68,.7),
-          0 0 8px rgba(239,68,68,.25);
+          0 0 2px rgba(239,68,68,.9),
+          0 0 10px rgba(239,68,68,.35);
       }
       .glitch::before,
       .glitch::after{
         content: attr(data-text);
         position:absolute; left:0; top:0; width:100%; overflow:hidden;
         clip-path: inset(0 0 0 0);
-        opacity:.75;
+        opacity:.9; /* stronger than before */
+        mix-blend-mode: screen;
       }
       .glitch::before{
-        color:#ff4d4d;
-        transform: translate3d(-1px, 0, 0);
+        color:#22c55e; /* green-500 */
+        transform: translate3d(-1.6px, 0, 0); /* ~8% more offset */
         animation: glitchTop 4s infinite linear alternate;
       }
       .glitch::after{
-        color:#ff1a1a;
-        transform: translate3d(1px, 0, 0);
+        color:#ef4444; /* red-500 */
+        transform: translate3d(1.6px, 0, 0);  /* ~8% more offset */
         animation: glitchBot 3.5s infinite linear alternate;
       }
       @keyframes glitchTop{
-        0%   { clip-path: inset(0 0 85% 0); transform: translateX(-1px); }
-        20%  { clip-path: inset(0 0 75% 0); transform: translateX(-2px); }
-        40%  { clip-path: inset(0 0 90% 0); transform: translateX(0); }
-        60%  { clip-path: inset(0 0 80% 0); transform: translateX(-1px); }
-        80%  { clip-path: inset(0 0 88% 0); transform: translateX(-0.5px); }
-        100% { clip-path: inset(0 0 82% 0); transform: translateX(-1px); }
+        0%   { clip-path: inset(0 0 85% 0); transform: translateX(-1.6px); }
+        20%  { clip-path: inset(0 0 72% 0); transform: translateX(-2.0px); }
+        40%  { clip-path: inset(0 0 90% 0); transform: translateX(-0.8px); }
+        60%  { clip-path: inset(0 0 78% 0); transform: translateX(-1.6px); }
+        80%  { clip-path: inset(0 0 88% 0); transform: translateX(-1.2px); }
+        100% { clip-path: inset(0 0 82% 0); transform: translateX(-1.6px); }
       }
       @keyframes glitchBot{
-        0%   { clip-path: inset(85% 0 0 0); transform: translateX(1px); }
-        20%  { clip-path: inset(75% 0 0 0); transform: translateX(2px); }
-        40%  { clip-path: inset(90% 0 0 0); transform: translateX(0); }
-        60%  { clip-path: inset(80% 0 0 0); transform: translateX(1px); }
-        80%  { clip-path: inset(88% 0 0 0); transform: translateX(0.5px); }
-        100% { clip-path: inset(82% 0 0 0); transform: translateX(1px); }
+        0%   { clip-path: inset(85% 0 0 0); transform: translateX(1.6px); }
+        20%  { clip-path: inset(72% 0 0 0); transform: translateX(2.0px); }
+        40%  { clip-path: inset(90% 0 0 0); transform: translateX(0.8px); }
+        60%  { clip-path: inset(78% 0 0 0); transform: translateX(1.6px); }
+        80%  { clip-path: inset(88% 0 0 0); transform: translateX(1.2px); }
+        100% { clip-path: inset(82% 0 0 0); transform: translateX(1.6px); }
       }
 
-      /* Keep content above scrim */
+      /* Keep content above canvas/scrim */
       header, main { position: relative; z-index: 2; }
     </style>
   </head>
@@ -104,7 +100,8 @@
   <body class="text-gray-200">
     <!-- Matrix background -->
     <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-    <div class="matrix-scrim" aria-hidden="true"></div>
+    <!-- Block matrix just under navbar -->
+    <div class="nav-scrim" aria-hidden="true"></div>
 
     <!-- Header/Nav -->
     <header class="bg-black/80 backdrop-blur text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
@@ -142,12 +139,12 @@
       <!-- Landing Section -->
       <section id="ctf" class="py-16">
         <div class="max-w-6xl mx-auto px-4">
-          <!-- Centered header: HTB handle with subtle glitch -->
+          <!-- Centered header: HTB handle with red/green glitch -->
           <h1 class="text-4xl font-bold mb-8 text-center">
             <span class="glitch" data-text="sudormrflol">sudormrflol</span>
           </h1>
 
-          <!-- Two-column grid (unchanged structure) -->
+          <!-- Two-column grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
             <!-- Card 1: Command Injection -->
             <a href="/CTF/command-injection.html"
@@ -193,24 +190,25 @@
           w=canvas.width=window.innerWidth;
           h=canvas.height=window.innerHeight;
           cols=Math.floor(w/fontSize);
-          yPos=Array(cols).fill(0);
+          // Start rows at random heights so rain is visible immediately near the top
+          yPos=Array.from({length: cols}, () => Math.floor(Math.random()*(h/fontSize)));
         }
         resize();
         window.addEventListener('resize',resize);
 
         function draw(){
-          // trail fade
-          ctx.fillStyle='rgba(0,0,0,0.22)';
+          // lighter trail fade so characters pop more
+          ctx.fillStyle='rgba(0,0,0,0.14)';
           ctx.fillRect(0,0,w,h);
 
           ctx.font=fontSize+'px monospace';
           for(let i=0;i<cols;i++){
             const ch=chars.charAt(Math.floor(Math.random()*chars.length));
-            // various reds for depth
+            // brighter reds for visibility
             const palette=[
-              'rgba(239,68,68,0.85)',  // red-500
-              'rgba(220,38,38,0.80)',  // red-600
-              'rgba(248,113,113,0.75)' // red-400
+              'rgba(239,68,68,0.95)',  // red-500 high alpha
+              'rgba(220,38,38,0.90)',  // red-600
+              'rgba(248,113,113,0.88)' // red-400
             ];
             ctx.fillStyle=palette[Math.floor(Math.random()*palette.length)];
             ctx.fillText(ch, i*fontSize, yPos[i]*fontSize);
