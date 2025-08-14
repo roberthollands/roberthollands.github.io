@@ -184,29 +184,34 @@
       <section id="experience" class="w-full flex justify-center pt-12 px-4">
         <div class="w-full max-w-4xl bg-gray-50 p-6 rounded-lg shadow-sm">
           <h2 class="text-2xl font-bold mb-4">Work Experience</h2>
-          <div class="space-y-4">
+          <div class="space-y-6">
             <div>
               <h3 class="flex items-center text-lg font-semibold space-x-2">
                 <img class="w-6 h-6 clicky" src="/images/taxslayer.png" alt="TaxSlayer Logo">
                 <span>Help Desk Engineer at TaxSlayer</span>
               </h3>
-              <p class="text-sm text-gray-500 mb-2">September 2024 &ndash; Present</p>
-              <p class="mb-2">
-                Deploy patching scripts, applications, and security policies via Microsoft Intune, Jamf Pro, and ConnectWise Automate. Manage user onboarding/offboarding, imaging, and access control across hybrid macOS and Windows environments using Entra ID and Active Directory.
+              <p class="text-sm text-gray-500 mb-3">September 2024 &ndash; Present</p>
+
+              <!-- Updated leadership-oriented summary -->
+              <p class="mb-3 text-gray-700">
+                Lead enterprise endpoint compliance and security posture improvements across macOS, Windows, and iOS environments by managing Microsoft Intune, Jamf Pro, and ConnectWise Automate. Collaborate with security teams to enforce conditional access, remediate vulnerabilities, and automate identity provisioning.
               </p>
-              <ul class="list-disc list-inside space-y-1 text-gray-700">
-                <li>Jamf Administrator for the macOS fleet; deployed applications, scripts, and compliance profiles via Jamf.</li>
-                <li>Built and maintained configuration profiles, compliance policies, and conditional access rules with Intune.</li>
-                <li>Automated onboarding and offboarding via PowerShell for full-time employees, including Azure group assignment, E5 license provisioning, and password distribution.</li>
-                <li>Created and managed AD user accounts, security groups, shared mailboxes, and SaaS access; assigned licenses and group-based entitlements via Entra ID and Microsoft 365.</li>
-                <li>Managed and audited hardware/software inventory systems; ensured asset traceability and lifecycle accuracy.</li>
-                <li>Configured SaaS SSO via Entra.</li>
-                <li>Created Windows images.</li>
-                <li>Delivered white-glove IT support to C-suite.</li>
-                <li>Managed ticketing workflows in Jira, tracking escalations, endpoint requests, and resolution SLAs.</li>
-                <li>Wrote Confluence KB articles on best practices and technical solutions.</li>
-                <li>Managed Zendesk account provisioning and licensing.</li>
-                <li>Administered Zoom platform, managing licensing and users, Zoom Room deployment, and iPad controller setup for executive meeting spaces.</li>
+
+              <!-- Updated bullets -->
+              <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li>Administer enterprise endpoint management with Microsoft Intune, Jamf Pro, and ConnectWise Automate; deploy security patches, compliance policies, configuration profiles, and remediation scripts to maintain a secure fleet.</li>
+                <li>Manage Apple Business Manager: renew APNS certificates, control user access, and handle Apple ID provisioning and deletion.</li>
+                <li>Develop and deploy custom ADMX templates to automate BIOS updates, reducing Tier 1 workload and improving compliance.</li>
+                <li>Automate user onboarding and offboarding for 200+ seasonal staff with PowerShell; integrate Entra ID group assignment, E5 license provisioning, KnowBe4 training enrollment, and secure password distribution.</li>
+                <li>Create custom Active Directory attributes to auto-assign KnowBe4 training start dates for phishing awareness campaigns.</li>
+                <li>Provision and manage Active Directory accounts, security groups, shared mailboxes, and SaaS access with license and entitlement assignments via Entra ID and Microsoft 365.</li>
+                <li>Configure SSO integrations for SaaS platforms via Entra to ensure secure authentication and access control.</li>
+                <li>Maintain hardware and software inventory systems for asset traceability and lifecycle management.</li>
+                <li>Administer the Zoom enterprise platform, including Zoom Rooms and iPad-based control systems for executive meeting spaces.</li>
+                <li>Document technical procedures and best practices in Confluence; manage ticket workflows and escalation SLAs in Jira.</li>
+                <li>Create and maintain Windows images to standardize deployment and improve reliability.</li>
+                <li>Deliver white-glove IT support to C-level executives and other high-priority stakeholders.</li>
+                <li>Manage Zendesk account provisioning and licensing.</li>
               </ul>
             </div>
           </div>
@@ -237,12 +242,12 @@
         window.addEventListener('resize',resize);
 
         function draw(){
-          ctx.fillStyle='rgba(11,18,32,0.20)';
+          ctx.fillStyle='rgba(11,18,32,0.20)'; /* trail fade */
           ctx.fillRect(0,0,w,h);
           ctx.font=fontSize+'px monospace';
           for(let i=0;i<cols;i++){
             const ch=chars.charAt(Math.floor(Math.random()*chars.length));
-            ctx.fillStyle=Math.random()>0.5?'rgba(34,211,238,0.75)':'rgba(16,185,129,0.75)';
+            ctx.fillStyle=Math.random()>0.5?'rgba(34,211,238,0.75)':'rgba(16,185,129,0.75)'; /* cyan/emerald */
             ctx.fillText(ch,i*fontSize,yPos[i]*fontSize);
             if(yPos[i]*fontSize>h && Math.random()>0.975){ yPos[i]=0; } else { yPos[i]++; }
           }
