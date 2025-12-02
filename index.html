@@ -5,90 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Robert Hollands | Portfolio</title>
 
-    <!-- Tailwind -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-
-    <!-- Toastify CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"/>
 
-    <!-- Custom theme + effects -->
     <style>
-      :root{
-        --bg1:#0b1220;
-        --bg2:#0f1b2d;
-        --accent:#22d3ee;  /* cyan-400 */
-        --accent2:#10b981; /* emerald-500 */
-      }
-      html,body{height:100%}
-      body.theme-dark{
-        color:#e5e7eb;
-        background:linear-gradient(180deg,var(--bg1),var(--bg2));
-        overflow-x:hidden;
-        position:relative;
+      :root {
+        --bg1: #020617;
+        --bg2: #0b1220;
+        --accent: #22d3ee;
+        --accent2: #10b981;
       }
 
-      /* ---------- MATRIX CANVAS & SCRIM (keeps code off content) ---------- */
-      #matrix-canvas{
-        position:fixed; inset:0; z-index:0; opacity:.18; pointer-events:none;
+      html, body {
+        height: 100%;
       }
-      .matrix-scrim{
-        position:fixed; inset:0; pointer-events:none; z-index:1;
+
+      body.theme-dark {
+        color: #e5e7eb;
         background:
-          radial-gradient(ellipse at 50% 20%,
-            rgba(11,18,32,.92) 0%,
-            rgba(11,18,32,.92) 35%,
-            rgba(11,18,32,.75) 52%,
-            rgba(11,18,32,.45) 65%,
-            rgba(11,18,32,.15) 78%,
-            rgba(11,18,32,0) 100%);
+          radial-gradient(circle at top, rgba(34, 211, 238, 0.12), transparent 55%),
+          radial-gradient(circle at bottom, rgba(16, 185, 129, 0.10), transparent 55%),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        background-attachment: fixed;
+        overflow-x: hidden;
+        position: relative;
       }
 
-      /* ---------- Nav hover color ---------- */
-      .site-nav a{transition:color .2s ease,transform .2s ease}
-      .site-nav a:hover,.site-nav a:focus-visible{color:var(--accent)}
+      .site-nav a {
+        transition: color .2s ease, transform .2s ease;
+      }
 
-      /* ---------- Hover spin for profile + certs ---------- */
-      @keyframes spin-slow{to{transform:rotate(360deg)}}
-      .hover-spin{will-change:transform}
-      .hover-spin:hover{animation:spin-slow 6s linear infinite}
+      .site-nav a:hover,
+      .site-nav a:focus-visible {
+        color: var(--accent);
+      }
 
-      /* Lift effect for non-spinning assets */
-      .clicky{cursor:pointer;transition:transform .2s ease,filter .2s ease}
-      .clicky:hover{transform:translateY(-2px) scale(1.02);filter:drop-shadow(0 6px 12px rgba(0,0,0,.35))}
-      /* Don’t override spin with lift */
-      .hover-spin.clicky:hover{transform:none;filter:none}
+      @keyframes spin-slow {
+        to { transform: rotate(360deg); }
+      }
 
-      /* Readability on dark */
-      .theme-dark .text-gray-900,.theme-dark .text-black{color:#e5e7eb}
-      .theme-dark .text-gray-700{color:#e5e7eb}
-      .theme-dark .text-gray-500{color:#cbd5e1}
-      .theme-dark .bg-white{background-color:rgba(255,255,255,.02)}
-      .theme-dark .bg-gray-50{background-color:rgba(255,255,255,.04)}
-      .theme-dark .shadow-sm{box-shadow:0 1px 3px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.5)}
+      .hover-spin {
+        will-change: transform;
+      }
 
-      header,main,footer{position:relative;z-index:2} /* above scrim */
+      .hover-spin:hover {
+        animation: spin-slow 6s linear infinite;
+      }
+
+      .clicky {
+        cursor: pointer;
+        transition: transform .2s ease, filter .2s ease;
+      }
+
+      .clicky:hover {
+        transform: translateY(-2px) scale(1.02);
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, .35));
+      }
+
+      .hover-spin.clicky:hover {
+        transform: none;
+        filter: none;
+      }
+
+      .theme-dark .text-gray-900,
+      .theme-dark .text-black {
+        color: #e5e7eb;
+      }
+
+      .theme-dark .text-gray-700 {
+        color: #e5e7eb;
+      }
+
+      .theme-dark .text-gray-500 {
+        color: #cbd5e1;
+      }
+
+      .theme-dark .bg-white {
+        background-color: rgba(255, 255, 255, .02);
+      }
+
+      .theme-dark .bg-gray-50 {
+        background-color: rgba(255, 255, 255, .04);
+      }
+
+      .theme-dark .shadow-sm {
+        box-shadow:
+          0 1px 3px rgba(0, 0, 0, .6),
+          0 1px 2px rgba(0, 0, 0, .5);
+      }
+
+      header, main, footer {
+        position: relative;
+        z-index: 2;
+      }
     </style>
   </head>
 
   <body class="theme-dark bg-white text-gray-900">
-    <!-- MATRIX canvas -->
-    <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-    <!-- SCRIM that hides matrix directly under content -->
-    <div class="matrix-scrim" aria-hidden="true"></div>
-
-    <!-- Header/Nav -->
     <header class="bg-gray-900/80 backdrop-blur text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
       <div class="max-w-4xl mx-auto flex justify-between items-center">
         <div class="text-xl font-bold">
           <a href="/" class="hover:text-cyan-300">Robert Hollands</a>
         </div>
-        <!-- Hamburger Button -->
         <button id="nav-toggle" class="md:hidden focus:outline-none" aria-label="Toggle navigation">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        <!-- Nav Links -->
         <nav id="nav-menu"
              class="site-nav hidden md:flex flex-col md:flex-row justify-start md:justify-between items-center w-full
                     bg-gray-900/95 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0">
@@ -101,19 +124,23 @@
         </nav>
       </div>
       <script>
-        const toggleBtn=document.getElementById('nav-toggle');
-        const menu=document.getElementById('nav-menu');
-        toggleBtn.addEventListener('click',()=>{menu.classList.toggle('hidden')});
+        const toggleBtn = document.getElementById('nav-toggle');
+        const menu = document.getElementById('nav-menu');
+        toggleBtn.addEventListener('click', () => {
+          menu.classList.toggle('hidden');
+        });
       </script>
     </header>
 
-    <!-- Keep structure/order the same -->
     <main class="flex flex-col justify-center items-center pt-20 space-y-4">
-      <!-- Profile -->
-      <img class="w-48 h-48 rounded-full object-cover mb-4 hover-spin clicky"
-           src="/images/IMG_1827.png"
-           alt="Profile image of Robert Hollands">
+      <img
+        class="w-48 h-48 rounded-full object-cover mb-4 hover-spin clicky"
+        src="/images/IMG_1827.png"
+        alt="Profile image of Robert Hollands"
+      />
+
       <h1 class="text-2xl font-bold">Robert Hollands</h1>
+
       <div class="flex space-x-6">
         <a href="https://github.com/roberthollands" target="_blank" rel="noopener">
           <img class="w-10 h-10 clicky" src="/images/githubwhite.png" alt="GitHub">
@@ -123,7 +150,6 @@
         </a>
       </div>
 
-      <!-- About Me -->
       <section class="text-center max-w-2xl px-4 pt-10">
         <h2 class="text-2xl font-bold mb-2">About Me</h2>
         <p class="text-gray-700">
@@ -133,10 +159,8 @@
         </p>
       </section>
 
-      <!-- Certifications & Education -->
       <section id="education" class="w-full flex justify-center pt-12 px-4">
         <div class="w-full max-w-2xl flex flex-row justify-between items-start gap-8">
-          <!-- Certifications Column -->
           <div class="flex-1 flex flex-col items-center">
             <h2 class="text-xl font-bold mb-4">Certifications</h2>
             <ul class="space-y-4">
@@ -157,19 +181,19 @@
               </li>
             </ul>
           </div>
-          <!-- Education Column -->
+
           <div class="flex-1 flex flex-col items-center justify-start">
             <h2 class="text-xl font-bold mb-4 text-center">Education</h2>
             <ul class="space-y-6">
               <li class="flex items-center space-x-4">
-                <img class="w-14 h-14 clicky" src="/images/AU.jpg" alt="Graduation Cap">
+                <img class="w-14 h-14 clicky" src="/images/AU.jpg" alt="Augusta University logo">
                 <div>
                   <p class="text-lg font-medium">B.S. in Cyber Security</p>
                   <p class="text-gray-500">Augusta University</p>
                 </div>
               </li>
-              <li class="flex items-centered space-x-4">
-                <img class="w-14 h-14 clicky" src="/images/AU.jpg" alt="Graduation Cap">
+              <li class="flex items-center space-x-4">
+                <img class="w-14 h-14 clicky" src="/images/AU.jpg" alt="Augusta University logo">
                 <div>
                   <p class="text-lg font-medium">Advanced Cyber Defender Certificate</p>
                   <p class="text-gray-500">Augusta University</p>
@@ -180,38 +204,39 @@
         </div>
       </section>
 
-      <!-- Work Experience Section -->
       <section id="experience" class="w-full flex justify-center pt-12 px-4">
         <div class="w-full max-w-4xl bg-gray-50 p-6 rounded-lg shadow-sm">
           <h2 class="text-2xl font-bold mb-4">Work Experience</h2>
-          <div class="space-y-6">
+          <div class="space-y-8">
             <div>
               <h3 class="flex items-center text-lg font-semibold space-x-2">
                 <img class="w-6 h-6 clicky" src="/images/taxslayer.png" alt="TaxSlayer Logo">
-                <span>Help Desk Engineer at TaxSlayer</span>
+                <span>Information Security Analyst at TaxSlayer LLC</span>
               </h3>
-              <p class="text-sm text-gray-500 mb-3">September 2024 &ndash; Present</p>
-
-              <!-- Updated leadership-oriented summary -->
-              <p class="mb-3 text-gray-700">
-                Lead enterprise endpoint compliance and security posture improvements across macOS, Windows, and iOS environments by managing Microsoft Intune, Jamf Pro, and ConnectWise Automate. Collaborate with security teams to enforce conditional access, remediate vulnerabilities, and automate identity provisioning.
-              </p>
-
-              <!-- Updated bullets -->
+              <p class="text-sm text-gray-500 mb-3">September 2025 &ndash; Present &middot; Augusta, Georgia</p>
               <ul class="list-disc list-inside space-y-2 text-gray-700">
-                <li>Administer enterprise endpoint management with Microsoft Intune, Jamf Pro, and ConnectWise Automate; deploy security patches, compliance policies, configuration profiles, and remediation scripts to maintain a secure fleet.</li>
-                <li>Manage Apple Business Manager: renew APNS certificates, control user access, and handle Apple ID provisioning and deletion.</li>
-                <li>Develop and deploy custom ADMX templates to automate BIOS updates, reducing Tier 1 workload and improving compliance.</li>
-                <li>Automate user onboarding and offboarding for 200+ seasonal staff with PowerShell; integrate Entra ID group assignment, E5 license provisioning, KnowBe4 training enrollment, and secure password distribution.</li>
-                <li>Create custom Active Directory attributes to auto-assign KnowBe4 training start dates for phishing awareness campaigns.</li>
-                <li>Provision and manage Active Directory accounts, security groups, shared mailboxes, and SaaS access with license and entitlement assignments via Entra ID and Microsoft 365.</li>
-                <li>Configure SSO integrations for SaaS platforms via Entra to ensure secure authentication and access control.</li>
-                <li>Maintain hardware and software inventory systems for asset traceability and lifecycle management.</li>
-                <li>Administer the Zoom enterprise platform, including Zoom Rooms and iPad-based control systems for executive meeting spaces.</li>
-                <li>Document technical procedures and best practices in Confluence; manage ticket workflows and escalation SLAs in Jira.</li>
-                <li>Create and maintain Windows images to standardize deployment and improve reliability.</li>
-                <li>Deliver white-glove IT support to C-level executives and other high-priority stakeholders.</li>
-                <li>Manage Zendesk account provisioning and licensing.</li>
+                <li>Take ownership of alerts, scope impact, quarantine devices, document evidence, and close remediation across CrowdStrike, Microsoft Defender, Netskope, FortiDLP, and Abnormal Security.</li>
+                <li>Partner with engineering to roll out Seraphic and Netskope through Jamf and Intune. Created browser controls that block risky extensions, downloads, file URLs, and malicious JavaScript.</li>
+                <li>Collaborate with IT when incidents involve identity, conditional access, or app permissions and work with the CISO to update policies when changes are needed.</li>
+                <li>Review roles and groups on a schedule. Remove stale access and close over-privileged accounts to reduce attack vectors using Axonius connectors and CrowdStrike Identity for detection.</li>
+                <li>Review CSPM alerts for Azure resources such as NSGs, Kubernetes clusters, VMs, and VM scale sets; partnered with DevOps to remediate misconfigurations after verification.</li>
+                <li>Optimized patch automation trigger logic utilizing SOAR workflows within CrowdStrike boosting SLA performance from 62% to 87%.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="flex items-center text-lg font-semibold space-x-2">
+                <img class="w-6 h-6 clicky" src="/images/taxslayer.png" alt="TaxSlayer Logo">
+                <span>Help Desk Engineer at TaxSlayer LLC</span>
+              </h3>
+              <p class="text-sm text-gray-500 mb-3">September 2024 &ndash; September 2025 &middot; Augusta, Georgia</p>
+              <ul class="list-disc list-inside space-y-2 text-gray-700">
+                <li>Administer enterprise endpoint management with Microsoft Intune, Jamf Pro, and ConnectWise Automate; deploy security patches, compliance policies, configuration profiles, and scripts to maintain a secure fleet.</li>
+                <li>Developed and deployed custom ADMX templates to automate BIOS updates, reducing Tier 1 patching tickets and improving compliance.</li>
+                <li>Update legacy Bash and PowerShell scripts deployed through MDM platforms.</li>
+                <li>Automated user onboarding/offboarding for 200+ seasonal staff with PowerShell, integrating Entra ID group assignment, E5 license provisioning, KnowBe4 training, and secure password distribution.</li>
+                <li>Created AD attribute workflow triggering KnowBe4 training by start date, eliminating manual assignment and ensuring 100% on-time training deployment.</li>
+                <li>Configure SSO integrations for SaaS platforms via Entra, ensuring secure authentication.</li>
               </ul>
             </div>
           </div>
@@ -219,66 +244,29 @@
       </section>
     </main>
 
-    <!-- Toastify JS -->
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    <!-- Matrix rain script -->
     <script>
-      (function(){
-        const canvas=document.getElementById('matrix-canvas');
-        const ctx=canvas.getContext('2d');
-        let w,h,cols,yPos;
-        const fontSize=16;      // density
-        const speed=40;         // lower = slower (ms)
-        const chars='アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$@#%&*{}[]<>/|\\\\+-=_?';
-
-        function resize(){
-          w=canvas.width=window.innerWidth;
-          h=canvas.height=window.innerHeight;
-          cols=Math.floor(w/fontSize);
-          yPos=Array(cols).fill(0);
-        }
-        resize();
-        window.addEventListener('resize',resize);
-
-        function draw(){
-          ctx.fillStyle='rgba(11,18,32,0.20)'; /* trail fade */
-          ctx.fillRect(0,0,w,h);
-          ctx.font=fontSize+'px monospace';
-          for(let i=0;i<cols;i++){
-            const ch=chars.charAt(Math.floor(Math.random()*chars.length));
-            ctx.fillStyle=Math.random()>0.5?'rgba(34,211,238,0.75)':'rgba(16,185,129,0.75)'; /* cyan/emerald */
-            ctx.fillText(ch,i*fontSize,yPos[i]*fontSize);
-            if(yPos[i]*fontSize>h && Math.random()>0.975){ yPos[i]=0; } else { yPos[i]++; }
-          }
-        }
-        function loop(){ draw(); setTimeout(()=>requestAnimationFrame(loop),speed); }
-        loop();
-      })();
-    </script>
-
-    <!-- Toast (throttled, pinned above everything) -->
-    <script>
-      document.addEventListener('DOMContentLoaded', ()=>{
-        const STORAGE_KEY='resumeToastTs_v2';
-        const ts=localStorage.getItem(STORAGE_KEY);
-        const now=Date.now();
-        if(!ts || now-parseInt(ts,10)>15*60*1000){
+      document.addEventListener('DOMContentLoaded', () => {
+        const STORAGE_KEY = 'resumeToastTs_v2';
+        const ts = localStorage.getItem(STORAGE_KEY);
+        const now = Date.now();
+        if (!ts || now - parseInt(ts, 10) > 15 * 60 * 1000) {
           Toastify({
-            text:'<span style="display:inline-flex; align-items:center;"><a href="/RHOLLANDSRES.pdf" target="_blank" rel="noopener" download="RHOLLANDSRES.pdf" style="display:inline-flex; align-items:center; color:#fff; text-decoration:none;"><img src="/images/pdf-logo.png" alt="PDF" style="width:16px; margin-right:8px;">Want the resume in PDF? Click here</a></span>',
-            duration:7000,
-            escapeMarkup:false,
-            gravity:'top',
-            position:'left',
-            close:true,
-            style:{
-              background:'linear-gradient(90deg, #22d3ee, #10b981)',
-              color:'#fff',
-              whiteSpace:'nowrap',
-              maxWidth:'calc(100% - 40px)',
-              zIndex:2147483647
+            text: '<span style="display:inline-flex; align-items:center;"><a href="/RHOLLANDSRES.pdf" target="_blank" rel="noopener" download="RHOLLANDSRES.pdf" style="display:inline-flex; align-items:center; color:#fff; text-decoration:none;"><img src="/images/pdf-logo.png" alt="PDF" style="width:16px; margin-right:8px;">Want the resume in PDF? Click here</a></span>',
+            duration: 7000,
+            escapeMarkup: false,
+            gravity: 'top',
+            position: 'left',
+            close: true,
+            style: {
+              background: 'linear-gradient(90deg, #22d3ee, #10b981)',
+              color: '#fff',
+              whiteSpace: 'nowrap',
+              maxWidth: 'calc(100% - 40px)',
+              zIndex: 2147483647
             },
-            offset:{x:20,y:60}
+            offset: { x: 20, y: 60 }
           }).showToast();
           localStorage.setItem(STORAGE_KEY, now.toString());
         }
