@@ -8,48 +8,43 @@
 
     <style>
       :root{
-        --jet:#000000;
-        --ink:#0a0a0a;
-        --card:#0d0d0d;
+        --jet:#020617;
+        --ink:#020617;
+        --card:#0b0b0b;
         --muted:#9ca3af;
-        --accent:#ef4444; /* red-500 */
+        --accent:#ef4444;
       }
-      html,body{height:100%}
+
+      html, body {
+        height: 100%;
+      }
+
       body {
-        background: linear-gradient(180deg, var(--jet), var(--ink));
+        background:
+          radial-gradient(circle at top, rgba(239, 68, 68, 0.2), transparent 55%),
+          radial-gradient(circle at bottom, rgba(15, 23, 42, 0.5), transparent 55%),
+          linear-gradient(180deg, var(--jet), var(--ink));
+        background-attachment: fixed;
         color: #e5e7eb;
         overflow-x: hidden;
         position: relative;
       }
 
-      /* Matrix canvas (now stronger and full-page) */
-      #matrix-canvas{
-        position:fixed; inset:0; z-index:0; opacity:.33; pointer-events:none; /* was .18, now +15pp */
-      }
-
-      /* Only block matrix under the NAV BAR (not the content) */
-      .nav-scrim{
-        position:fixed; left:0; top:0; right:0; height:72px; /* cover header zone */
-        background: #000; opacity:.95; z-index:1; pointer-events:none;
-      }
-
-      /* Header: translucent black, red hover on links */
       .site-nav a{
         transition: color .2s ease, transform .2s ease;
       }
+
       .site-nav a:hover,
       .site-nav a:focus-visible{
         color: var(--accent);
       }
 
-      /* Cards on dark */
       .card{
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.06);
-        box-shadow: 0 10px 20px rgba(0,0,0,.45);
+        background: rgba(15,15,15,0.9);
+        border: 1px solid rgba(248,250,252,0.06);
+        box-shadow: 0 10px 25px rgba(0,0,0,.7);
       }
 
-      /* Handle glitch effect: red/green and slightly stronger */
       .glitch {
         position: relative;
         display: inline-block;
@@ -57,24 +52,32 @@
           0 0 2px rgba(239,68,68,.9),
           0 0 10px rgba(239,68,68,.35);
       }
+
       .glitch::before,
       .glitch::after{
         content: attr(data-text);
-        position:absolute; left:0; top:0; width:100%; overflow:hidden;
+        position:absolute;
+        left:0;
+        top:0;
+        width:100%;
+        overflow:hidden;
         clip-path: inset(0 0 0 0);
-        opacity:.9; /* stronger than before */
+        opacity:.9;
         mix-blend-mode: screen;
       }
+
       .glitch::before{
-        color:#22c55e; /* green-500 */
-        transform: translate3d(-1.6px, 0, 0); /* ~8% more offset */
+        color:#22c55e;
+        transform: translate3d(-1.6px, 0, 0);
         animation: glitchTop 4s infinite linear alternate;
       }
+
       .glitch::after{
-        color:#ef4444; /* red-500 */
-        transform: translate3d(1.6px, 0, 0);  /* ~8% more offset */
+        color:#ef4444;
+        transform: translate3d(1.6px, 0, 0);
         animation: glitchBot 3.5s infinite linear alternate;
       }
+
       @keyframes glitchTop{
         0%   { clip-path: inset(0 0 85% 0); transform: translateX(-1.6px); }
         20%  { clip-path: inset(0 0 72% 0); transform: translateX(-2.0px); }
@@ -83,6 +86,7 @@
         80%  { clip-path: inset(0 0 88% 0); transform: translateX(-1.2px); }
         100% { clip-path: inset(0 0 82% 0); transform: translateX(-1.6px); }
       }
+
       @keyframes glitchBot{
         0%   { clip-path: inset(85% 0 0 0); transform: translateX(1.6px); }
         20%  { clip-path: inset(72% 0 0 0); transform: translateX(2.0px); }
@@ -92,31 +96,25 @@
         100% { clip-path: inset(82% 0 0 0); transform: translateX(1.6px); }
       }
 
-      /* Keep content above canvas/scrim */
-      header, main { position: relative; z-index: 2; }
+      header, main {
+        position: relative;
+        z-index: 2;
+      }
     </style>
   </head>
 
   <body class="text-gray-200">
-    <!-- Matrix background -->
-    <canvas id="matrix-canvas" aria-hidden="true"></canvas>
-    <!-- Block matrix just under navbar -->
-    <div class="nav-scrim" aria-hidden="true"></div>
-
-    <!-- Header/Nav -->
     <header class="bg-black/80 backdrop-blur text-white px-4 py-4 shadow-md fixed w-full z-10 relative">
       <div class="max-w-4xl mx-auto flex justify-between items-center">
         <div class="text-xl font-bold">
           <a href="/" class="hover:text-red-500">Robert Hollands</a>
         </div>
-        <!-- Hamburger Button -->
         <button id="nav-toggle" class="md:hidden focus:outline-none" aria-label="Toggle navigation">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        <!-- Nav Links -->
         <nav id="nav-menu"
              class="site-nav hidden md:flex flex-row justify-between items-center w-full bg-black/95 md:bg-transparent px-4 md:px-0 py-4 md:py-0 absolute md:static top-full left-0">
           <a href="/" class="hover:text-red-500">Home</a>
@@ -128,25 +126,22 @@
         </nav>
       </div>
       <script>
-        const toggleBtn=document.getElementById("nav-toggle");
-        const menu=document.getElementById("nav-menu");
-        toggleBtn.addEventListener("click",()=>{ menu.classList.toggle("hidden"); });
+        const toggleBtn = document.getElementById("nav-toggle");
+        const menu = document.getElementById("nav-menu");
+        toggleBtn.addEventListener("click", () => {
+          menu.classList.toggle("hidden");
+        });
       </script>
     </header>
 
-    <!-- Main content -->
     <main class="pt-24">
-      <!-- Landing Section -->
       <section id="ctf" class="py-16">
         <div class="max-w-6xl mx-auto px-4">
-          <!-- Centered header: HTB handle with red/green glitch -->
           <h1 class="text-4xl font-bold mb-8 text-center">
             <span class="glitch" data-text="sudormrflol">sudormrflol</span>
           </h1>
 
-          <!-- Two-column grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <!-- Card 1: Command Injection -->
             <a href="/CTF/command-injection.html"
                class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
               <div class="overflow-hidden">
@@ -159,7 +154,6 @@
               </div>
             </a>
 
-            <!-- Card 2: SQL Injection Fundamentals -->
             <a href="/CTF/sql-injection-fundamentals.html"
                class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
               <div class="overflow-hidden">
@@ -175,50 +169,5 @@
         </div>
       </section>
     </main>
-
-    <!-- Red Matrix rain -->
-    <script>
-      (function(){
-        const canvas=document.getElementById('matrix-canvas');
-        const ctx=canvas.getContext('2d');
-        let w,h,cols,yPos;
-        const fontSize=16;
-        const speed=40; // lower = slower
-        const chars='01▮▯▢▣░▒▓━╺╸╾╼◼◻◽◾';
-
-        function resize(){
-          w=canvas.width=window.innerWidth;
-          h=canvas.height=window.innerHeight;
-          cols=Math.floor(w/fontSize);
-          // Start rows at random heights so rain is visible immediately near the top
-          yPos=Array.from({length: cols}, () => Math.floor(Math.random()*(h/fontSize)));
-        }
-        resize();
-        window.addEventListener('resize',resize);
-
-        function draw(){
-          // lighter trail fade so characters pop more
-          ctx.fillStyle='rgba(0,0,0,0.14)';
-          ctx.fillRect(0,0,w,h);
-
-          ctx.font=fontSize+'px monospace';
-          for(let i=0;i<cols;i++){
-            const ch=chars.charAt(Math.floor(Math.random()*chars.length));
-            // brighter reds for visibility
-            const palette=[
-              'rgba(239,68,68,0.95)',  // red-500 high alpha
-              'rgba(220,38,38,0.90)',  // red-600
-              'rgba(248,113,113,0.88)' // red-400
-            ];
-            ctx.fillStyle=palette[Math.floor(Math.random()*palette.length)];
-            ctx.fillText(ch, i*fontSize, yPos[i]*fontSize);
-
-            if(yPos[i]*fontSize > h && Math.random() > 0.975){ yPos[i]=0; } else { yPos[i]++; }
-          }
-        }
-        function loop(){ draw(); setTimeout(()=>requestAnimationFrame(loop), speed); }
-        loop();
-      })();
-    </script>
   </body>
 </html>
