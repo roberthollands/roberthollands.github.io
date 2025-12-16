@@ -98,24 +98,6 @@
         position: relative;
         z-index: 2;
       }
-
-      /* ===== Floating animation (applies to all cards now) ===== */
-      .cert-float{
-        display: inline-block;
-        animation: float 6s ease-in-out infinite;
-        will-change: transform;
-      }
-
-      /* Slight stagger so they don't bob in perfect sync */
-      .float-delay-1{ animation-delay: 0s; }
-      .float-delay-2{ animation-delay: .4s; }
-      .float-delay-3{ animation-delay: .8s; }
-
-      @keyframes float{
-        0%,100% { transform: translateY(-16px); }
-        50%     { transform: translateY( 16px); }
-      }
-      /* ===== End Floating ===== */
     </style>
   </head>
 
@@ -157,32 +139,27 @@
             <span class="glitch" data-text="sudormrflol">sudormrflol</span>
           </h1>
 
-          <!-- Keep 2 cards per row on sm+ -->
+          <!-- Keep 2 cards per row on sm+ (same as before) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
 
             <!-- Dante (newest, first) -->
             <a href="/CTF/Dante.html"
                class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
-              <div class="overflow-hidden p-6 flex items-center justify-center">
-                <div class="cert-float float-delay-1 w-full">
-                  <img src="/images/dante.png" alt="Dante"
-                       class="w-full h-64 object-cover rounded-lg"/>
-                </div>
+              <div class="overflow-hidden">
+                <img src="/images/dante.png" alt="Dante"
+                     class="w-full h-64 object-cover transform transition-transform duration-300 hover:scale-105"/>
               </div>
-              <div class="p-6 pt-0">
+              <div class="p-6">
                 <h3 class="text-xl font-semibold text-gray-100 mb-2">Dante</h3>
                 <p class="text-sm" style="color: var(--muted)">December 12, 2025 • 0 min read</p>
               </div>
             </a>
 
-            <!-- Command Injection -->
             <a href="/CTF/command-injection.html"
                class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
               <div class="overflow-hidden">
-                <div class="cert-float float-delay-2 w-full">
-                  <img src="/images/Command-Injection.png" alt="Command Injection"
-                       class="w-full h-64 object-cover transform transition-transform duration-300 hover:scale-105"/>
-                </div>
+                <img src="/images/Command-Injection.png" alt="Command Injection"
+                     class="w-full h-64 object-cover transform transition-transform duration-300 hover:scale-105"/>
               </div>
               <div class="p-6">
                 <h3 class="text-xl font-semibold text-gray-100 mb-2">Command Injection</h3>
@@ -190,14 +167,11 @@
               </div>
             </a>
 
-            <!-- SQL Injection Fundamentals -->
             <a href="/CTF/sql-injection-fundamentals.html"
                class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
               <div class="overflow-hidden">
-                <div class="cert-float float-delay-3 w-full">
-                  <img src="/images/SQL_Injections.png" alt="SQL Injection Fundamentals"
-                       class="w-full h-64 object-cover transform transition-transform duration-300 hover:scale-105"/>
-                </div>
+                <img src="/images/SQL_Injections.png" alt="SQL Injection Fundamentals"
+                     class="w-full h-64 object-cover transform transition-transform duration-300 hover:scale-105"/>
               </div>
               <div class="p-6">
                 <h3 class="text-xl font-semibold text-gray-100 mb-2">SQL Injection Fundamentals</h3>
