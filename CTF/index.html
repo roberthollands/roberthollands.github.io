@@ -15,9 +15,7 @@
         --accent:#ef4444;
       }
 
-      html, body {
-        height: 100%;
-      }
+      html, body { height: 100%; }
 
       body {
         background:
@@ -100,6 +98,19 @@
         position: relative;
         z-index: 2;
       }
+
+      /* ===== Added: HTB-style floating animation for Dante card ===== */
+      .cert-float{
+        display: inline-block;
+        animation: float 6s ease-in-out infinite;
+        will-change: transform;
+      }
+
+      @keyframes float{
+        0%,100% { transform: translateY(-16px); }
+        50%     { transform: translateY( 16px); }
+      }
+      /* ===== End Added ===== */
     </style>
   </head>
 
@@ -141,7 +152,25 @@
             <span class="glitch" data-text="sudormrflol">sudormrflol</span>
           </h1>
 
+          <!-- Keep 2 cards per row on sm+ (same as you had) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+
+            <!-- ===== Added: Dante (newest, goes first) ===== -->
+            <a href="/CTF/Dante.html"
+               class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
+              <div class="overflow-hidden p-6 flex items-center justify-center">
+                <div class="cert-float w-full">
+                  <img src="/images/dante.png" alt="Dante"
+                       class="w-full h-64 object-cover rounded-lg"/>
+                </div>
+              </div>
+              <div class="p-6 pt-0">
+                <h3 class="text-xl font-semibold text-gray-100 mb-2">Dante</h3>
+                <p class="text-sm" style="color: var(--muted)">Newest • writeup</p>
+              </div>
+            </a>
+            <!-- ===== End Added ===== -->
+
             <a href="/CTF/command-injection.html"
                class="block rounded-lg overflow-hidden card hover:shadow-xl transition-shadow duration-200">
               <div class="overflow-hidden">
@@ -165,6 +194,7 @@
                 <p class="text-sm" style="color: var(--muted)">August 2, 2025 • 5 min read</p>
               </div>
             </a>
+
           </div>
         </div>
       </section>
